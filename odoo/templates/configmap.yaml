@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "odoo.config.fullname" . }}
+  labels:
+    {{- include "odoo.common.labels" . | nindent 4 }}
+data:
+  PGHOST: {{ .Values.config.postgresql.host | quote }}
+  PGPORT: {{ .Values.config.postgresql.port | quote }}
+  PGUSER: {{ .Values.config.postgresql.user | quote }}
+  PGDATABASE: {{ .Values.config.postgresql.database | quote }}
+  PROXY_MODE: {{ .Values.config.proxyMode | quote }}
+  WITHOUT_DEMO: {{ .Values.config.withoutDemo | quote }}
+  SMTP_SERVER: {{ .Values.config.smtp.host | quote }}
+  SMTP_PORT: {{ .Values.config.smtp.port | quote }}
+  SMTP_USER: {{ .Values.config.smtp.user | quote }}
+  SMTP_SSL: {{ .Values.config.smtp.ssl | quote }}
+  LIST_DB: {{ .Values.config.listDB | quote }}
+
+  {{- if .Values.web.enabled }}
+  web.conf: {{- toYaml .Values.web.config | nindent 4 }}
+  {{- end }}
+
+  {{- if .Values.queue.enabled }}
+  queue.conf: {{- toYaml .Values.queue.config | nindent 4 }}
+  {{- end }}

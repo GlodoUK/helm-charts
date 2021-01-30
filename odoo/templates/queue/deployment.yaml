@@ -1,0 +1,60 @@
+{{- if .Values.queue.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "odoo.queue.fullname" . }}
+  labels:
+    {{- include "odoo.queue.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.queue.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "odoo.queue.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.queue.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "odoo.queue.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.queue.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Values.queue.name }}
+          securityContext:
+            {{- toYaml .Values.queue.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}"
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          resources:
+            {{- toYaml .Values.queue.resources | nindent 12 }}
+          volumeMounts:
+            - name: odoo-data
+              mountPath: /var/lib/odoo
+      {{- with .Values.queue.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.queue.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.queue.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: odoo-data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "odoo.persistence.fullname" .) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+
+{{- end }}

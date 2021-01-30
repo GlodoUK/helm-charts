@@ -1,0 +1,144 @@
+# Default values for odoo.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Overrides the name of the chart, ignoring what is used at deployment
+nameOverride: "" 
+
+imagePullSecrets: []
+
+image:
+  repository: glodouk/odoo
+  pullPolicy: Always
+  tag: ""
+
+config:
+  proxyMode: "true"
+  withoutDemo: "true"
+  listDB: "true"
+  adminPassword: ""
+
+  postgresql:
+    host: ""
+    user: ""
+    password: ""
+    port: 5432
+    database: ""
+
+  smtp:
+    host: "false"
+    port: "false"
+    user: "false"
+    password: "false"
+    ssl: "false"
+
+# Where /var/lib/odoo will get stored. Without persistence it will be temporary!
+persistence:
+  enabled: true
+  name: "storage"
+  storageClassName: ""
+  existingClaim: ""
+  annotations: {}
+  accessMode: ReadWriteMany
+  size: 100Gi
+
+web:
+  enabled: true
+  name: "web"
+
+  config: |
+    [options]
+    limit_memory_soft = 3758096384
+    limit_memory_hard = 4294967296
+    limit_time_cpu = 360
+    limit_time_real = 360
+    limit_time_real_cron = 360
+    max_cron_threads = 1
+    workers = 5
+    longpolling_port = 8072
+
+  replicaCount: 1
+  service:
+    type: ClusterIP
+
+  ingress:
+    enabled: true
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    hosts:
+      - chart-example.local
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+    #
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+queue:
+  enabled: true
+  name: "queue"
+  config: |
+    [options]
+    server_wide_modules = queue_job
+    workers = 2
+    max_cron_threads = 1
+    limit_memory_soft = 3758096384
+    limit_memory_hard = 4294967296
+    limit_time_cpu = 14400
+    limit_time_real = 14400
+    limit_time_real_cron = 14400
+  replicaCount: 1
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1

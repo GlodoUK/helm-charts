@@ -1,0 +1,21 @@
+{{- if .Values.web.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "odoo.web.fullname" . }}
+  labels:
+    {{- include "odoo.web.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.web.service.type }}
+  ports:
+    - port: 8069
+      targetPort: 8069
+      protocol: TCP
+      name: web
+    - port: 8072
+      targetPort: 8072
+      protocol: TCP
+      name: longpolling
+  selector:
+    {{- include "odoo.web.selectorLabels" . | nindent 4 }}
+{{- end }}
