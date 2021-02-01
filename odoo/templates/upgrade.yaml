@@ -29,5 +29,4 @@ spec:
           - click-odoo-update
         args:
           - "--ignore-core-addons"
-          - "--ignore-addons studio_customization,prt_mail_messages,prt_mail_messages_pro"
 {{ end }}
