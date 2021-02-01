@@ -20,6 +20,7 @@ config:
     host: "10.150.13.4"
     user: "CHANGEME"
     password: "CHANGEME"
+    database: "CHANGEME"
 
 web:
   enabled: true
@@ -36,3 +37,13 @@ upgrade:
 ```
 
 4. Run `helm install CHANGEME_PROJECTNAME -f myvals.yaml odoo -n CHANGEME_NAMESPACE`
+5. Keep `myvals.yaml` you will need this for future upgrades
+
+To inspect:
+
+`helm ls -n CHANGEME_NAMESPACE`
+`helm del CHANGEME_PROJECTNAME -n CHANGEME_NAMESPACE`
+
+To Upgrade:
+
+1. `helm upgrade --install CHANGEME_PROJECTNAME -f myvals.yaml odoo -n CHANGEME_NAMESPACE`
