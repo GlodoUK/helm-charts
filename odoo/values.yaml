@@ -70,11 +70,9 @@ web:
       # kubernetes.io/tls-acme: "true"
     match: Host(`chart-example.local`)
     middlewares: []
-    tls: []
-    #  - secretName: chart-example-tls
-    #    hosts:
-    #      - chart-example.local
-    #
+    tls:
+      secretName: ""
+      certResolver: "letsencrypt"
 
   resources: {}
     # We usually recommend not to specify default resources and to leave this as a conscious

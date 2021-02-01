@@ -28,4 +28,13 @@ spec:
     services:
     - name: {{ $fullname }}
       port: 8072
+  {{- if or .Values.web.ingress.tls.secretName .Values.web.ingress.tls.certResolver }}
+  tls:
+  {{- if .Values.web.ingress.tls.secretName }}
+    secretName: {{ .Values.web.ingress.tls.secret }}
+  {{- end }}
+  {{- if .Values.web.ingress.tls.certResolver }}
+    certResolver: {{ .Values.web.ingress.tls.certResolver }}
+  {{- end }}
+  {{- end }}
 {{- end }}
