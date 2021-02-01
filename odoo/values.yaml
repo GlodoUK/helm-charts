@@ -36,7 +36,7 @@ config:
 persistence:
   enabled: true
   name: "storage"
-  storageClassName: ""
+  storageClassName: "nfs-client"
   existingClaim: ""
   annotations: {}
   accessMode: ReadWriteMany
@@ -102,7 +102,7 @@ web:
     # runAsUser: 1000
 
 queue:
-  enabled: true
+  enabled: false
   name: "queue"
   config: |
     [options]
