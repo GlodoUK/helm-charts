@@ -1,3 +1,3 @@
 # Glodo Helm charts
 
-⚠ Currently work in progress. Do not use.
+- odoo - opinionated odoo deployment designed for Doodba+Glodo
