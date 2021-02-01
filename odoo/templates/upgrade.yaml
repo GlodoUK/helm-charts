@@ -26,7 +26,8 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env: {{- include "odoo.common.env" . | nindent 10 }}
         command:
-          - click-odoo-update
+          - "/bin/bash"
         args:
-          - "--ignore-core-addons"
+          - "-c"
+          - "/opt/odoo/common/entrypoint; click-odoo-update --ignore-core-addons"
 {{ end }}

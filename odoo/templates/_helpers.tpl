@@ -88,7 +88,6 @@ Web labels
 */}}
 {{- define "odoo.web.labels" -}}
 component: {{ .Values.web.name | quote }}
-rollme: {{ randAlphaNum 5 | quote }}
 {{ include "odoo.common.labels" . }}
 {{- end }}
 

@@ -12,10 +12,11 @@ spec:
       {{- include "odoo.web.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.web.podAnnotations }}
       annotations:
+        {{- with .Values.web.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- end }}
+        rollme: {{ randAlphaNum 5 | quote }}
       labels:
         {{- include "odoo.web.selectorLabels" . | nindent 8 }}
     spec:
