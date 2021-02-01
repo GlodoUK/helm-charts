@@ -11,7 +11,7 @@ spec:
     - port: 8069
       targetPort: 8069
       protocol: TCP
-      name: web
+      name: http
     - port: 8072
       targetPort: 8072
       protocol: TCP

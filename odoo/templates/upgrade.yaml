@@ -1,0 +1,33 @@
+{{ if and .Values.upgrade .Values.upgrade.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "odoo.upgrade.fullname" . }}
+  labels:
+    {{- include "odoo.common.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": 'pre-upgrade'
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    metadata:
+      name: {{ include "odoo.upgrade.fullname" . }}
+      labels:
+        {{- include "odoo.common.labels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Never
+      containers:
+      - name: {{ include "odoo.upgrade.fullname" . }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env: {{- include "odoo.common.env" . | nindent 10 }}
+        command:
+          - click-odoo-update
+        args:
+          - "--ignore-core-addons"
+          - "--ignore-addons studio_customization,prt_mail_messages,prt_mail_messages_pro"
+{{ end }}

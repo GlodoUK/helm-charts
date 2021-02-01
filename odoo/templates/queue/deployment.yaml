@@ -31,11 +31,14 @@ spec:
             {{- toYaml .Values.queue.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}"
           imagePullPolicy: {{ .Values.pullPolicy }}
+          env: {{- include "odoo.common.env" . | nindent 12 }}
           resources:
             {{- toYaml .Values.queue.resources | nindent 12 }}
           volumeMounts:
             - name: odoo-data
               mountPath: /var/lib/odoo
+            - name: odoo-config
+              mountPath: "/opt/odoo/custom/conf.d/"
       {{- with .Values.queue.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -56,5 +59,11 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
+        - name: odoo-config
+          configMap:
+            name: {{ include "odoo.config.fullname" . }}
+            items:
+              - key: "queue.conf"
+                path: "99-queue.conf"
 
 {{- end }}

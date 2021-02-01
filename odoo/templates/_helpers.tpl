@@ -33,6 +33,26 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Common envars
+*/}}
+{{- define "odoo.common.env" -}}
+{{- range list "PGHOST" "PGPORT" "PGUSER" "PGDATABASE" "PROXY_MODE" "WITHOUT_DEMO" "SMTP_SERVER" "SMTP_PORT" "SMTP_USER" "SMTP_SSL" "LIST_DB" }}
+- name: {{ . }}
+  valueFrom:
+    configMapKeyRef:
+      name: {{ include "odoo.config.fullname" $ }}
+      key: {{ . }}
+{{- end }}
+{{- range list "PGPASSWORD" "ADMIN_PASSWORD" "SMTP_PASSWORD" }}
+- name: {{ . }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "odoo.secret.fullname" $ }}
+      key: {{ . }}
+{{- end }}
+{{- end }}
+
+{{/*
 Persistence fullname
 */}}
 {{- define "odoo.persistence.fullname" -}}
@@ -68,6 +88,7 @@ Web labels
 */}}
 {{- define "odoo.web.labels" -}}
 component: {{ .Values.web.name | quote }}
+rollme: {{ randAlphaNum 5 | quote }}
 {{ include "odoo.common.labels" . }}
 {{- end }}
 
@@ -97,6 +118,7 @@ Queue labels
 {{- define "odoo.queue.labels" -}}
 component: {{ .Values.queue.name | quote }}
 {{ include "odoo.common.labels" . }}
+rollme: {{ randAlphaNum 5 | quote }}
 {{- end }}
 
 {{/*
@@ -121,5 +143,17 @@ Secret fullname
 {{- define "odoo.secret.fullname" -}}
 {{- $name := default .Chart.Name .Values.nameOverride }}
 {{- printf "%s-secret" $name | trunc 63 | trimSuffix "-" -}}
+{{- end }}
+
+{{/*
+upgrade fullname
+*/}}
+{{- define "odoo.upgrade.fullname" -}}
+{{- if .Values.upgrade.fullnameOverride }}
+{{- .Values.upgrade.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- $name := default .Chart.Name .Values.nameOverride }}
+{{- printf "%s-%s" $name .Values.upgrade.name | trunc 63 | trimSuffix "-" -}}
+{{- end }}
 {{- end }}
 

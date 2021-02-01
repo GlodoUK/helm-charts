@@ -1,0 +1,31 @@
+{{- if and .Values.web.enabled .Values.web.ingress.enabled }}
+{{- $fullname := include "odoo.web.fullname" . -}}
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ $fullname }}
+  labels:
+    {{- include "odoo.common.labels" . | nindent 4 }}
+  {{- with .Values.web.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  entryPoints:
+    {{- toYaml .Values.web.ingress.entryPoints | nindent 4 }}
+  routes:
+  - match: {{ .Values.web.ingress.match }}
+    kind: Rule
+    middlewares:
+      {{- toYaml .Values.web.ingress.middlewares | nindent 6 }}
+    services:
+    - name: {{ $fullname }}
+      port: 8069
+  - match: ({{ .Values.web.ingress.match }}) && PathPrefix(`/longpolling/`)
+    kind: Rule
+    middlewares:
+      {{- toYaml .Values.web.ingress.middlewares | nindent 6 }}
+    services:
+    - name: {{ $fullname }}
+      port: 8072
+{{- end }}

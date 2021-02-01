@@ -31,15 +31,21 @@ spec:
             {{- toYaml .Values.web.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env: {{- include "odoo.common.env" . | nindent 12 }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8069
+              protocol: TCP
+            - name: longpolling
+              containerPort: 8072
               protocol: TCP
           resources:
             {{- toYaml .Values.web.resources | nindent 12 }}
           volumeMounts:
             - name: odoo-data
               mountPath: /var/lib/odoo
+            - name: odoo-config
+              mountPath: "/opt/odoo/custom/conf.d/"
       {{- with .Values.web.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -60,4 +66,10 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
+        - name: odoo-config
+          configMap:
+            name: {{ include "odoo.config.fullname" . }}
+            items:
+              - key: "web.conf"
+                path: "99-web.conf"
 {{- end }}
