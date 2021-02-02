@@ -61,6 +61,16 @@ web:
   service:
     type: ClusterIP
 
+  dns:
+    enabled: false
+    endPoints: []
+      # MUST be DNSEndpoint compatible
+      # - dnsName: "something.domain"
+      #   recordTTL: 60
+      #   recordType: A
+      #   targets:
+      #     - xx.xx.xx.xx
+
   ingress:
     enabled: true
     entryPoints: 

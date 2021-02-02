@@ -1,0 +1,12 @@
+{{- if and .Values.web.enabled .Values.web.dns.enabled }}
+{{- $fullname := include "odoo.web.fullname" . -}}
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: {{ $fullname }}
+  labels:
+    {{- include "odoo.common.labels" . | nindent 4 }}
+spec:
+  endpoints:
+    {{- toYaml .Values.web.dns.endPoints | nindent 4 }}
+{{- end }}
