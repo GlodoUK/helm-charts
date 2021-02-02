@@ -65,6 +65,8 @@ web:
     enabled: false
     endPoints: []
       # MUST be DNSEndpoint compatible
+      # As of time of writing only A, CNAME, TXT and SRV records are supported
+      # See: https://github.com/ytsarev/external-dns/blob/master/endpoint/endpoint.go#L27-L36
       # - dnsName: "something.domain"
       #   recordTTL: 60
       #   recordType: A
