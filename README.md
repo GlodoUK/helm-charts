@@ -1,6 +1,6 @@
 # Helm charts
 
-- odoo - opinionated odoo deployment designed for running Doodba based Odoo deployments with Glodo defaults
+- odoo - opinionated odoo deployment designed for running [Doodba](https://github.com/Tecnativa/doodba) based Odoo deployments with Glodo defaults
 
 ## Support and Contributing
 
