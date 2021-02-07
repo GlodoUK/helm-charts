@@ -17,7 +17,7 @@ image:
 config:
   adminPassword: "CHANGEME"
   postgresql:
-    host: "10.150.13.4"
+    host: "CHANGEME"
     user: "CHANGEME"
     password: "CHANGEME"
     database: "CHANGEME"
