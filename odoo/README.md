@@ -7,9 +7,6 @@
 3. Create custom values file, for example;
 
 ```yaml
-imagePullSecrets:
-  - name: docker-hub
-
 image:
   repository: "glodouk/odoo"
   tag: "13.0e"
