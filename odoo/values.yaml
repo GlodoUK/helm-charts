@@ -72,6 +72,14 @@ web:
       #   recordType: A
       #   targets:
       #     - xx.xx.xx.xx
+      #
+  certificate:
+    enabled: false
+    secretName: "odoo-web-certificate"
+    dnsNames: []
+    issuerRef: 
+      name: letsencrypt
+      kind: ClusterIssuer
 
   ingress:
     enabled: true
