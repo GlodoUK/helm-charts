@@ -20,6 +20,8 @@ spec:
       labels:
         {{- include "odoo.queue.selectorLabels" . | nindent 8 }}
     spec:
+      strategy:
+        type: Recreate
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
