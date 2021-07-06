@@ -4,9 +4,9 @@
 
 ```console
 helm repo add glodo https://glodouk.github.io/helm-charts/
-helm search glodo
+helm search repo glodo
 ```
 
-## Readme
+## README & Chart Information
 
-See https://github.com/glodouk/helm-charts/
+See [https://github.com/glodouk/helm-charts/](https://github.com/glodouk/helm-charts/)
