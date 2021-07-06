@@ -1,18 +1,18 @@
 apiVersion: v2
 name: odoo
-description: An Doodba/Odoo Helm chart for Kubernetes
-
-# A chart can be either an 'application' or a 'library' chart.
-#
-# Application charts are a collection of templates that can be packaged into versioned archives
-# to be deployed.
-#
-# Library charts provide useful utilities or functions for the chart developer. They're included as
-# a dependency of application charts to inject those utilities and functions into the rendering
-# pipeline. Library charts do not define any templates and therefore cannot be deployed.
+description: An opinionated "Bring Your Own Image" Doodba (Odoo) Helm chart for Kubernetes
 type: application
+keywords:
+  - Odoo
+  - Doodba
+  - Opinionated
+sources: https://github.com/glodouk/helm-charts/
+maintainers:
+  - name: GlodoUK
+    email: techy@glodo.uk
+    url: https://glodo.uk/
 
-# This is the chart version. This version number should be incremented each time you make changes
-# to the chart and its templates, including the app version.
-# Versions are expected to follow Semantic Versioning (https://semver.org/)
+# XXX: Please remember to bump this on every modification.
+# Due to the fact that this chart is Odoo version agnostic, please use the date
+# as the patch part of the version string.
 version: 1.0.20200419

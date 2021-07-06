@@ -1,5 +1,14 @@
 # Helm charts
 
+## Installation
+
+```bash
+helm repo add glodo https://glodouk.github.io/helm-charts/
+helm search repo glodo
+```
+
+## Charts
+
 - odoo - opinionated odoo deployment designed for running [Doodba](https://github.com/Tecnativa/doodba) based Odoo deployments with Glodo defaults
 
 ## Support and Contributing
