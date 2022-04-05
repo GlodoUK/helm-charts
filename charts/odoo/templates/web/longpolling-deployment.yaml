@@ -1,15 +1,15 @@
-{{- if .Values.web.enabled -}}
+{{- if and .Values.web.enabled .Values.web.splitLongpolling -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "odoo.web.fullname" . }}
+  name: {{ include "odoo.web.splitLongpollingFullname" . }}
   labels:
-    {{- include "odoo.web.labels" . | nindent 4 }}
+    {{- include "odoo.web.splitLongpolling.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.web.replicaCount }}
+  replicas: {{ .Values.web.splitLongpollingReplicaCount }}
   selector:
     matchLabels:
-      {{- include "odoo.web.selectorLabels" . | nindent 6 }}
+      {{- include "odoo.web.splitlongpolling.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -18,7 +18,7 @@ spec:
         {{- end }}
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
-        {{- include "odoo.web.selectorLabels" . | nindent 8 }}
+        {{- include "odoo.web.splitlongpolling.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -27,21 +27,17 @@ spec:
       securityContext:
         {{- toYaml .Values.web.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Values.web.name }}
+        - name: {{ .Values.web.splitLongpollingName }}
           securityContext:
             {{- toYaml .Values.web.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}"
+          args: ["odoo", "gevent"]
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env: {{- include "odoo.common.env" . | nindent 12 }}
           ports:
-            - name: http
-              containerPort: 8069
-              protocol: TCP
-            {{- if not .Values.web.splitLongPolling }}
             - name: longpolling
               containerPort: 8072
               protocol: TCP
-            {{- end }}
           resources:
             {{- toYaml .Values.web.resources | nindent 12 }}
           volumeMounts:

@@ -100,6 +100,36 @@ component: {{ .Values.web.name | quote }}
 {{- end }}
 
 {{/*
+Web longpolling fullname
+*/}}
+{{- define "odoo.web.splitLongpollingFullname" -}}
+{{- if .Values.web.splitLongpollingFullnameOverride }}
+{{- .Values.web.splitLongpollingFullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- $name := default .Chart.Name .Values.nameOverride }}
+{{- printf "%s-%s" $name .Values.web.splitLongpollingName | trunc 63 | trimSuffix "-" -}}
+{{- end }}
+{{- end }}
+
+
+{{/*
+Web longpolling labels
+*/}}
+{{- define "odoo.web.splitLongpolling.labels" -}}
+component: {{ .Values.web.splitLongpollingName | quote }}
+{{ include "odoo.common.labels" . }}
+{{- end }}
+
+{{/*
+Web longpolling Selector labels
+*/}}
+{{- define "odoo.web.splitLongpolling.selectorLabels" -}}
+component: {{ .Values.web.splitLongpollingName | quote }}
+{{ include "odoo.common.selectorLabels" . }}
+{{- end }}
+
+
+{{/*
 Queue fullname
 */}}
 {{- define "odoo.queue.fullname" -}}

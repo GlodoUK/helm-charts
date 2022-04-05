@@ -46,6 +46,12 @@ web:
   enabled: true
   name: "web"
 
+  # When set to true, longpolling will be split into it's own deployment,
+  # service and ingress
+  splitLongpolling: false
+  splitLongpollingName: "longpolling"
+  splitLongpollingReplicaCount: 1
+
   config: |
     [options]
     limit_memory_soft = 3758096384
@@ -72,7 +78,6 @@ web:
       #   recordType: A
       #   targets:
       #     - xx.xx.xx.xx
-      #
   certificate:
     enabled: false
     secretName: "odoo-web-certificate"

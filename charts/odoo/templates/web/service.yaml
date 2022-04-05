@@ -12,10 +12,12 @@ spec:
       targetPort: 8069
       protocol: TCP
       name: http
+    {{- if not .Values.web.splitLongpolling }}
     - port: 8072
       targetPort: 8072
       protocol: TCP
       name: longpolling
+    {{- end }}
   selector:
     {{- include "odoo.web.selectorLabels" . | nindent 4 }}
 {{- end }}
