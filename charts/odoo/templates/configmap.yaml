@@ -16,6 +16,11 @@ data:
   SMTP_USER: {{ .Values.config.smtp.user | quote }}
   SMTP_SSL: {{ .Values.config.smtp.ssl | quote }}
   LIST_DB: {{ .Values.config.listDB | quote }}
+  {{- if .Values.config.dbFilter }}
+  DB_FILTER: {{ .Values.config.dbFilter | quote }}
+  {{- else }}
+  DB_FILTER: "^{{ .Values.config.PGDATABASE }}$"
+  {{- end }}
 
   {{- if .Values.web.enabled }}
   web.conf: {{- toYaml .Values.web.config | nindent 4 }}

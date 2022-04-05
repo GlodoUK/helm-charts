@@ -6,7 +6,8 @@ keywords:
   - Odoo
   - Doodba
   - Opinionated
-sources: https://github.com/glodouk/helm-charts/
+sources:
+  - https://github.com/glodouk/helm-charts/
 maintainers:
   - name: GlodoUK
     email: techy@glodo.uk
@@ -15,4 +16,4 @@ maintainers:
 # XXX: Please remember to bump this on every modification.
 # Due to the fact that this chart is Odoo version agnostic, please use the date
 # as the patch part of the version string.
-version: 1.0.20200419
+version: 1.0.20201230

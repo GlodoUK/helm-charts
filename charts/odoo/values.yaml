@@ -16,6 +16,7 @@ config:
   proxyMode: "true"
   withoutDemo: "true"
   listDB: "true"
+  dbFilter: ".*"
   adminPassword: ""
 
   postgresql:
