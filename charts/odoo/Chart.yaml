@@ -9,11 +9,11 @@ keywords:
 sources:
   - https://github.com/glodouk/helm-charts/
 maintainers:
-  - name: GlodoUK
-    email: techy@glodo.uk
-    url: https://glodo.uk/
+  - name: Glo Networks
+    email: techy@glo.systems
+    url: https://www.glo.systems/
 
 # XXX: Please remember to bump this on every modification.
 # Due to the fact that this chart is Odoo version agnostic, please use the date
 # as the patch part of the version string.
-version: 1.0.20201230
+version: 1.0.20220408
