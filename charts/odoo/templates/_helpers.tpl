@@ -36,7 +36,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Common envars
 */}}
 {{- define "odoo.common.env" -}}
-{{- range list "PGHOST" "PGPORT" "PGUSER" "PGDATABASE" "PROXY_MODE" "WITHOUT_DEMO" "SMTP_SERVER" "SMTP_PORT" "SMTP_USER" "SMTP_SSL" "LIST_DB" "DB_FILTER" }}
+{{- range list "PGHOST" "PGPORT" "PGUSER" "PGDATABASE" "PROXY_MODE" "WITHOUT_DEMO" "SMTP_SERVER" "SMTP_PORT" "SMTP_USER" "SMTP_SSL" "LIST_DB" }}
 - name: {{ . }}
   valueFrom:
     configMapKeyRef:
@@ -49,6 +49,13 @@ Common envars
     secretKeyRef:
       name: {{ include "odoo.secret.fullname" $ }}
       key: {{ . }}
+{{- end }}
+{{- if .Values.config.dbFilter }}
+- name: DB_FILTER
+  valueFrom:
+    configMapKeyRef:
+      name: {{ include "odoo.config.fullname" $ }}
+      key: DB_FILTER
 {{- end }}
 {{- end }}
 
