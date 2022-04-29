@@ -1,0 +1,3 @@
+{{- if .Valuex.extraManifests }}
+{{ tpl .Values.extraManifests }}
+{{- end }}

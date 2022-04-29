@@ -95,6 +95,11 @@ web:
       secretName: ""
       certResolver: "letsencrypt"
 
+  # Optional extra environment variables
+  extraEnv: []
+  # - name: DO_STUFF
+  #   value: true
+
   resources: {}
     # We usually recommend not to specify default resources and to leave this as a conscious
     # choice for the user. This also increases chances charts run on environments with little
@@ -137,6 +142,11 @@ queue:
     limit_time_real_cron = 14400
   replicaCount: 1
 
+  # Optional extra environment variables
+  extraEnv: []
+  # - name: DO_STUFF
+  #   value: true
+
   resources: {}
     # We usually recommend not to specify default resources and to leave this as a conscious
     # choice for the user. This also increases chances charts run on environments with little
@@ -167,3 +177,9 @@ queue:
 upgrade:
   name: "upgrade"
   enabled: true
+
+# Use extraManifests (string) to add.
+# This is run through the templating system, and may be useful to create custom
+# additional deployments, statefulsets, etc. that need a "rollme" annotation
+# changed to force redeployment after changes are made.
+extraManifests: ""

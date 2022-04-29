@@ -34,7 +34,11 @@ spec:
             {{- toYaml .Values.queue.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}"
           imagePullPolicy: {{ .Values.pullPolicy }}
-          env: {{- include "odoo.common.env" . | nindent 12 }}
+          env:
+            {{- if .Values.queue.extraEnv }}
+              {{- toYaml .Values.queue.extraEnv | nindent 12 }}
+            {{- end }}
+            {{- include "odoo.common.env" . | nindent 12 }}
           resources:
             {{- toYaml .Values.queue.resources | nindent 12 }}
           volumeMounts:
