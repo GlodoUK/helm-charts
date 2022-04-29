@@ -29,5 +29,13 @@ spec:
           - "/bin/bash"
         args:
           - "-c"
-          - "/opt/odoo/common/entrypoint; click-odoo-update --ignore-core-addons"
+          - |
+            /opt/odoo/common/entrypoint
+            if [ "$( psql -XtAc "SELECT 1 FROM pg_database WHERE datname='$PGDATABASE'" )" = '1' ]
+            then
+              echo "Database $PGDATABASE exists, running click-odoo-update"
+              click-odoo-update --ignore-core-addons
+            else
+              echo "Database $PGDATABASE does not exist, skipping click-odoo-upgrade"
+            fi
 {{ end }}
