@@ -16,4 +16,4 @@ maintainers:
 # XXX: Please remember to bump this on every modification.
 # Due to the fact that this chart is Odoo version agnostic, please use the date
 # as the patch part of the version string.
-version: 1.0.20220429+1
+version: 1.0.20220430
