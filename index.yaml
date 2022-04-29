@@ -2,6 +2,26 @@ apiVersion: v1
 entries:
   odoo:
   - apiVersion: v2
+    created: "2022-04-29T10:04:12.671343643Z"
+    description: An opinionated "Bring Your Own Image" Doodba (Odoo) Helm chart for
+      Kubernetes
+    digest: a2f78e80d11fe749f8c206a87380de6d5928194b16e756bf3cff09d4fa7d54a0
+    keywords:
+    - Odoo
+    - Doodba
+    - Opinionated
+    maintainers:
+    - email: techy@glo.systems
+      name: Glo Networks
+      url: https://www.glo.systems/
+    name: odoo
+    sources:
+    - https://github.com/glodouk/helm-charts/
+    type: application
+    urls:
+    - https://github.com/GlodoUK/helm-charts/releases/download/odoo-1.0.20220429/odoo-1.0.20220429.tgz
+    version: 1.0.20220429
+  - apiVersion: v2
     created: "2022-04-08T11:55:43.965467826Z"
     description: An opinionated "Bring Your Own Image" Doodba (Odoo) Helm chart for
       Kubernetes
@@ -50,4 +70,4 @@ entries:
     urls:
     - https://github.com/GlodoUK/helm-charts/releases/download/odoo-1.0.20200419/odoo-1.0.20200419.tgz
     version: 1.0.20200419
-generated: "2022-04-08T11:55:43.965497926Z"
+generated: "2022-04-29T10:04:12.671362143Z"
