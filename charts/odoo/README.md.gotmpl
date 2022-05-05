@@ -1,0 +1,33 @@
+{{ template "chart.header" . }}
+{{ template "chart.description" . }}
+
+{{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+
+Opinionated odoo Bring Your Own Image chart designed for running [Doodba](https://github.com/Tecnativa/doodba) based Odoo deployments with Glodo defaults.
+
+Includes support for:
+  * Custom config, through both file and env var
+  * Multi deployment and replica (i.e. web, cron, and OCA/queue may be all run as separate deployments)
+  * [external-dns CRD](https://github.com/kubernetes-sigs/external-dns) support
+  * Traefik IngressRoute (standard Ingress is currently not available)
+  * Automatic running of [click-odoo-update](https://github.com/acsone/click-odoo-contrib#click-odoo-update-stable)
+
+Future plans include:
+  * Optionally automatically scaling down before click-odoo-update, and then back up
+  * Standard Ingress support
+
+## Installing the Chart
+
+To install the chart with the release name `my-release`:
+
+```console
+
+$ helm repo add glodo https://glodouk.github.io/helm-charts/
+$ helm install my-release glodo/{{ template "chart.name" . }} -f ./helm-values.yaml
+```
+
+{{ template "chart.requirementsSection" . }}
+
+{{ template "chart.valuesSection" . }}
+
+{{ template "helm-docs.versionFooter" . }}

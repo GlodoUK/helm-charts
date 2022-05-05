@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 # Overrides the name of the chart, ignoring what is used at deployment
-nameOverride: "" 
+nameOverride: ""
 
 imagePullSecrets: []
 
@@ -78,13 +78,13 @@ web:
     enabled: false
     secretName: "odoo-web-certificate"
     dnsNames: []
-    issuerRef: 
+    issuerRef:
       name: letsencrypt
       kind: ClusterIssuer
 
   ingress:
     enabled: true
-    entryPoints: 
+    entryPoints:
       - websecure
     annotations: {}
       # kubernetes.io/ingress.class: nginx

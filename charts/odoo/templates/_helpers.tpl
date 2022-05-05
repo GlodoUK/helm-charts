@@ -162,4 +162,3 @@ upgrade fullname
 {{- printf "%s-%s" $name .Values.upgrade.name | trunc 63 | trimSuffix "-" -}}
 {{- end }}
 {{- end }}
-

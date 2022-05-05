@@ -1,46 +1,105 @@
-# Odoo chart
+# odoo
 
-## Usage
+An opinionated "Bring Your Own Image" Doodba (Odoo) Helm chart for Kubernetes
 
-1. Create postgresql username and db
-2. Create kube namespace (`kubectl create ns CHANGEME_NAMESPACE`) and copy docker-hub pull secret if necessary
-3. Create custom values file, for example;
+![Version: 1.0.20220430](https://img.shields.io/badge/Version-1.0.20220430-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
-```yaml
-image:
-  repository: "glodouk/odoo"
-  tag: "13.0e"
+Opinionated odoo Bring Your Own Image chart designed for running [Doodba](https://github.com/Tecnativa/doodba) based Odoo deployments with Glodo defaults.
 
-config:
-  adminPassword: "CHANGEME"
-  postgresql:
-    host: "CHANGEME"
-    user: "CHANGEME"
-    password: "CHANGEME"
-    database: "CHANGEME"
+Includes support for:
+  * Custom config, through both file and env var
+  * Multi deployment and replica (i.e. web, cron, and OCA/queue may be all run as separate deployments)
+  * [external-dns CRD](https://github.com/kubernetes-sigs/external-dns) support
+  * Traefik IngressRoute (standard Ingress is currently not available)
+  * Automatic running of [click-odoo-update](https://github.com/acsone/click-odoo-contrib#click-odoo-update-stable)
 
-web:
-  enabled: true
+Future plans include:
+  * Optionally automatically scaling down before click-odoo-update, and then back up
+  * Standard Ingress support
 
-  ingress:
-    enabled: true
-    match: Host(`CHANGEME.glodo.cloud`)
+## Installing the Chart
 
-queue:
-  enabled: false
+To install the chart with the release name `my-release`:
 
-upgrade:
-  enabled: true
+```console
+
+$ helm repo add glodo https://glodouk.github.io/helm-charts/
+$ helm install my-release glodo/odoo -f ./helm-values.yaml
 ```
 
-4. Run `helm install CHANGEME_PROJECTNAME -f myvals.yaml odoo -n CHANGEME_NAMESPACE`
-5. Keep `myvals.yaml` you will need this for future upgrades
+## Values
 
-To inspect:
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| config.adminPassword | string | `""` |  |
+| config.dbFilter | string | `".*"` |  |
+| config.listDB | string | `"true"` |  |
+| config.postgresql.database | string | `""` |  |
+| config.postgresql.host | string | `""` |  |
+| config.postgresql.password | string | `""` |  |
+| config.postgresql.port | int | `5432` |  |
+| config.postgresql.user | string | `""` |  |
+| config.proxyMode | string | `"true"` |  |
+| config.smtp.host | string | `"false"` |  |
+| config.smtp.password | string | `"false"` |  |
+| config.smtp.port | string | `"false"` |  |
+| config.smtp.ssl | string | `"false"` |  |
+| config.smtp.user | string | `"false"` |  |
+| config.withoutDemo | string | `"true"` |  |
+| extraManifests | string | `""` |  |
+| image.pullPolicy | string | `"Always"` |  |
+| image.repository | string | `"glodouk/odoo"` |  |
+| image.tag | string | `""` |  |
+| imagePullSecrets | list | `[]` |  |
+| nameOverride | string | `""` |  |
+| persistence.accessMode | string | `"ReadWriteMany"` |  |
+| persistence.annotations | object | `{}` |  |
+| persistence.enabled | bool | `true` |  |
+| persistence.existingClaim | string | `""` |  |
+| persistence.name | string | `"storage"` |  |
+| persistence.size | string | `"100Gi"` |  |
+| persistence.storageClassName | string | `"nfs-client"` |  |
+| queue.affinity | object | `{}` |  |
+| queue.config | string | `"[options]\nserver_wide_modules = queue_job\nworkers = 2\nmax_cron_threads = 1\nlimit_memory_soft = 3758096384\nlimit_memory_hard = 4294967296\nlimit_time_cpu = 14400\nlimit_time_real = 14400\nlimit_time_real_cron = 14400\n"` |  |
+| queue.enabled | bool | `false` |  |
+| queue.extraEnv | list | `[]` |  |
+| queue.name | string | `"queue"` |  |
+| queue.nodeSelector | object | `{}` |  |
+| queue.podAnnotations | object | `{}` |  |
+| queue.podSecurityContext | object | `{}` |  |
+| queue.replicaCount | int | `1` |  |
+| queue.resources | object | `{}` |  |
+| queue.securityContext | object | `{}` |  |
+| queue.tolerations | list | `[]` |  |
+| upgrade.enabled | bool | `true` |  |
+| upgrade.name | string | `"upgrade"` |  |
+| web.affinity | object | `{}` |  |
+| web.certificate.dnsNames | list | `[]` |  |
+| web.certificate.enabled | bool | `false` |  |
+| web.certificate.issuerRef.kind | string | `"ClusterIssuer"` |  |
+| web.certificate.issuerRef.name | string | `"letsencrypt"` |  |
+| web.certificate.secretName | string | `"odoo-web-certificate"` |  |
+| web.config | string | `"[options]\nlimit_memory_soft = 3758096384\nlimit_memory_hard = 4294967296\nlimit_time_cpu = 360\nlimit_time_real = 360\nlimit_time_real_cron = 360\nmax_cron_threads = 1\nworkers = 5\nlongpolling_port = 8072\n"` |  |
+| web.dns.enabled | bool | `false` |  |
+| web.dns.endPoints | list | `[]` |  |
+| web.enabled | bool | `true` |  |
+| web.extraEnv | list | `[]` |  |
+| web.ingress.annotations | object | `{}` |  |
+| web.ingress.enabled | bool | `true` |  |
+| web.ingress.entryPoints[0] | string | `"websecure"` |  |
+| web.ingress.match | string | `"Host(`chart-example.local`)"` |  |
+| web.ingress.middlewares | list | `[]` |  |
+| web.ingress.tls.certResolver | string | `"letsencrypt"` |  |
+| web.ingress.tls.secretName | string | `""` |  |
+| web.name | string | `"web"` |  |
+| web.nodeSelector | object | `{}` |  |
+| web.podAnnotations | object | `{}` |  |
+| web.podSecurityContext | object | `{}` |  |
+| web.replicaCount | int | `1` |  |
+| web.resources | object | `{}` |  |
+| web.securityContext | object | `{}` |  |
+| web.service.type | string | `"ClusterIP"` |  |
+| web.tolerations | list | `[]` |  |
 
-`helm ls -n CHANGEME_NAMESPACE`
-`helm del CHANGEME_PROJECTNAME -n CHANGEME_NAMESPACE`
-
-To Upgrade:
-
-1. `helm upgrade --install CHANGEME_PROJECTNAME -f myvals.yaml odoo -n CHANGEME_NAMESPACE`
+----------------------------------------------
+Autogenerated from chart metadata using [helm-docs v1.9.1](https://github.com/norwoodj/helm-docs/releases/v1.9.1)
