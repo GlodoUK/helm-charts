@@ -1,52 +1,75 @@
 # Default values for odoo.
 # This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
 
-# Overrides the name of the chart, ignoring what is used at deployment
+# -- overrides the name of the chart, ignoring what is used at deployment
 nameOverride: ""
 
+# -- imagePullSecrets will be propagated to all containers, if set
 imagePullSecrets: []
 
 image:
-  repository: glodouk/odoo
-  pullPolicy: Always
+  # -- container image
+  repository: glodouk/CHANGEME
+  # -- container tag
   tag: ""
+  # -- container pullPolicy
+  pullPolicy: Always
 
 config:
+  # -- sets odoo configuration proxy_mode
   proxyMode: "true"
+  # -- sets odoo configuration without_demo
   withoutDemo: "true"
+  # -- sets odoo configuration list_db
   listDB: "true"
+  # -- sets odoo configuration db_filter
   dbFilter: ".*"
+  # -- sets odoo configuration admin_password
   adminPassword: ""
 
   postgresql:
+    # -- sets both odoo configuration db_host and environment variable PGHOST
     host: ""
+    # -- sets both odoo configuration db_username and environment variable PGUSER
     user: ""
+    # -- sets both odoo configuration db_password and environment variable PGPASSWORD
     password: ""
+    # -- sets both odoo configuration db_port and environment variable PGPORT
     port: 5432
+    # -- sets both odoo configuration PGDATABASE, if you are setting this, you
+    # probably waant to also set config.dbFilter
     database: ""
 
   smtp:
+    # -- sets odoo configuration smtp_server
     host: "false"
+    # -- sets odoo configuration smtp_port
     port: "false"
+    # -- sets odoo configuration smtp_user
     user: "false"
+    # -- sets odoo configuration smtp_password
     password: "false"
+    # -- sets odoo configuration smtp_ssl
     ssl: "false"
 
-# Where /var/lib/odoo will get stored. Without persistence it will be temporary!
 persistence:
+  # -- enable /var/lib/odoo persistence, without persistence it will be temporary - and that's a bad thing!
   enabled: true
   name: "storage"
   storageClassName: "nfs-client"
   existingClaim: ""
   annotations: {}
+  # -- when running deployment with replicas > 1 ReadWriteMany is a requirement, if you are in an environment without ReadWriteMany available then you will need to find an alternative solution i.e. https://github.com/camptocamp/odoo-cloud-platform/tree/14.0/base_attachment_object_storage
   accessMode: ReadWriteMany
   size: 100Gi
 
 web:
+  # -- enable Odoo web worker
   enabled: true
   name: "web"
 
+  # -- optional extra configuration options that Doodba does not allow to be set
+  # -- through environment variables
   config: |
     [options]
     limit_memory_soft = 3758096384
@@ -63,18 +86,22 @@ web:
     type: ClusterIP
 
   dns:
+    # -- enables external-dns CRD (DNSEndpoint) creation
     enabled: false
+    # -- must be DNSEndpoint compatible
+    # As of time of writing only A, CNAME, TXT and SRV records are supported
+    # See: https://github.com/ytsarev/external-dns/blob/master/endpoint/endpoint.go#L27-L36
+    # ```yaml
+    # - dnsName: "something.domain"
+    #   recordTTL: 60
+    #   recordType: A
+    #   targets:
+    #     - xx.xx.xx.xx
+    # ```
     endPoints: []
-      # MUST be DNSEndpoint compatible
-      # As of time of writing only A, CNAME, TXT and SRV records are supported
-      # See: https://github.com/ytsarev/external-dns/blob/master/endpoint/endpoint.go#L27-L36
-      # - dnsName: "something.domain"
-      #   recordTTL: 60
-      #   recordType: A
-      #   targets:
-      #     - xx.xx.xx.xx
-      #
+
   certificate:
+    # -- enables cert-manager Certificate creation
     enabled: false
     secretName: "odoo-web-certificate"
     dnsNames: []
@@ -83,6 +110,7 @@ web:
       kind: ClusterIssuer
 
   ingress:
+    # -- enable Traefik IngressRoute creation
     enabled: true
     entryPoints:
       - websecure
@@ -95,7 +123,7 @@ web:
       secretName: ""
       certResolver: "letsencrypt"
 
-  # Optional extra environment variables
+  # -- optional extra environment variables
   extraEnv: []
   # - name: DO_STUFF
   #   value: true
@@ -128,6 +156,7 @@ web:
     # runAsUser: 1000
 
 queue:
+  # -- enable a second deployment, specifically running oca/queue_job
   enabled: false
   name: "queue"
   config: |
@@ -142,7 +171,7 @@ queue:
     limit_time_real_cron = 14400
   replicaCount: 1
 
-  # Optional extra environment variables
+  # -- optional extra environment variables
   extraEnv: []
   # - name: DO_STUFF
   #   value: true
@@ -175,11 +204,9 @@ queue:
     # runAsUser: 1
 
 upgrade:
-  name: "upgrade"
+  # -- enable click-odoo-update on helm chart upgrade
   enabled: true
+  name: "upgrade"
 
-# Use extraManifests (string) to add.
-# This is run through the templating system, and may be useful to create custom
-# additional deployments, statefulsets, etc. that need a "rollme" annotation
-# changed to force redeployment after changes are made.
+# -- Use extraManifests (string) to add. This is run through the templating system, and may be useful to create custom additional deployments, statefulsets, etc. that need a "rollme" annotation changed to force redeployment after changes are made.
 extraManifests: ""
