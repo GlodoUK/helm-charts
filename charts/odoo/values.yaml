@@ -210,3 +210,14 @@ upgrade:
 
 # -- Use extraManifests (string) to add. This is run through the templating system, and may be useful to create custom additional deployments, statefulsets, etc. that need a "rollme" annotation changed to force redeployment after changes are made.
 extraManifests: ""
+
+# -- enable creation of velero schedule
+velero:
+  enabled: false
+  name: "backup"
+  defaultVolumesToRestic: true
+  includeClusterResources: false
+  schedule: "@midnight"
+  ttl: 336h0m00s
+  # -- escape hatch for any additional Schedule values
+  extraTemplate: {}
