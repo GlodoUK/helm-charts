@@ -13,26 +13,31 @@ spec:
     includedNamespaces:
       - {{ .Release.Namespace }}
     ttl: {{ .Values.velero.ttl | quote }}
-    {{- if .Values.velero.extraTemplate }}
-    {{ .Values.velero.extraTemplate | nindent 4 }}
+    {{- if or .Values.velero.pgDumpHook .values.velero.extraHooks }}
+    hooks:
+      resources:
+        {{- if .Values.velero.pgDumpHook }}
+        - name: pgdump
+          labelSelector:
+            matchLabels:
+              {{- include "odoo.web.selectorLabels" . | nindent 14 }}
+          pre:
+            - exec:
+                timeout: 720s
+                command:
+                  - "/bin/bash"
+                  - "-c"
+                  - "/usr/bin/pg_dump $PGDATABASE -Fc -f /var/lib/odoo/$PGDATABASE.dump"
+          post:
+            - exec:
+                timeout: 60s
+                command:
+                  - "/bin/bash"
+                  - "-c"
+                  - "rm /var/lib/odoo/$PGDATABASE.dump"
+        {{- end }}
+        {{- if .Values.velero.extraHooks }}
+        {{ .values.velero.extraHooks | nindent 8 }}
+        {{- end }}
     {{- end }}
-  hooks:
-    - name: pgdump
-      labelSelector:
-        matchLabels:
-          {{- include "odoo.web.selectorLabels" . | nindent 10 }}
-      pre:
-        - exec:
-          timeout: 720s
-          command:
-            - "/bin/bash"
-            - "-c"
-            - "/usr/bin/pg_dump $PGDATABASE -Fc -f /var/lib/odoo/$PGDATABASE.dump"
-      post:
-        - exec:
-          timeout: 720s
-          command:
-            - "/bin/bash"
-            - "-c"
-            - "rm /var/lib/odoo/$PGDATABASE.dump"
 {{ end }}

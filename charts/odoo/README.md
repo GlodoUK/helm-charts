@@ -73,8 +73,8 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 | queue.tolerations | list | `[]` |  |
 | upgrade.enabled | bool | `true` | enable click-odoo-update on helm chart upgrade |
 | upgrade.name | string | `"upgrade"` |  |
-| velero | object | `{"defaultVolumesToRestic":true,"enabled":false,"extraTemplate":{},"includeClusterResources":false,"name":"backup","schedule":"@midnight","ttl":"336h0m00s"}` | enable creation of velero schedule |
-| velero.extraTemplate | object | `{}` | escape hatch for any additional Schedule values |
+| velero | object | `{"defaultVolumesToRestic":true,"enabled":true,"extraHooks":[],"includeClusterResources":false,"name":"backup","pgDumpHook":true,"schedule":"5 6,12,18 * * *","ttl":"336h0m00s"}` | enable creation of velero schedule |
+| velero.pgDumpHook | bool | `true` | automatically take a pg_dump (custom format) of $PGDATABASE to /var/lib/odoo/$PGDATABASE.dump |
 | web.affinity | object | `{}` |  |
 | web.certificate.dnsNames | list | `[]` |  |
 | web.certificate.enabled | bool | `false` | enables cert-manager Certificate creation |

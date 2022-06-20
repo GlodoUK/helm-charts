@@ -213,11 +213,12 @@ extraManifests: ""
 
 # -- enable creation of velero schedule
 velero:
-  enabled: false
+  enabled: true
   name: "backup"
   defaultVolumesToRestic: true
   includeClusterResources: false
-  schedule: "@midnight"
+  # -- automatically take a pg_dump (custom format) of $PGDATABASE to /var/lib/odoo/$PGDATABASE.dump
+  pgDumpHook: true
+  schedule: "5 6,12,18 * * *"
   ttl: 336h0m00s
-  # -- escape hatch for any additional Schedule values
-  extraTemplate: {}
+  extraHooks: []
