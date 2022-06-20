@@ -73,8 +73,14 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 | queue.tolerations | list | `[]` |  |
 | upgrade.enabled | bool | `true` | enable click-odoo-update on helm chart upgrade |
 | upgrade.name | string | `"upgrade"` |  |
-| velero | object | `{"defaultVolumesToRestic":true,"enabled":true,"extraHooks":[],"includeClusterResources":false,"name":"backup","pgDumpHook":true,"schedule":"5 6,12,18 * * *","ttl":"336h0m00s"}` | enable creation of velero schedule |
+| velero.defaultVolumesToRestic | bool | `true` | see https://velero.io/docs/v1.9/customize-installation/#default-pod-volume-backup-to-restic |
+| velero.enabled | bool | `false` | enable creation of velero schedule |
+| velero.extraHooks | list | `[]` | additional hooks |
+| velero.includeClusterResources | bool | `false` | see https://velero.io/docs/v1.9/resource-filtering/#--include-cluster-resources |
+| velero.name | string | `"backup"` |  |
 | velero.pgDumpHook | bool | `true` | automatically take a pg_dump (custom format) of $PGDATABASE to /var/lib/odoo/$PGDATABASE.dump |
+| velero.schedule | string | `"5 6,12,18 * * *"` | schedule to run on |
+| velero.ttl | string | `"336h0m00s"` | backup retention period |
 | web.affinity | object | `{}` |  |
 | web.certificate.dnsNames | list | `[]` |  |
 | web.certificate.enabled | bool | `false` | enables cert-manager Certificate creation |
