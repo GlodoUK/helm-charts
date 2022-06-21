@@ -3,6 +3,7 @@ apiVersion: velero.io/v1
 kind: Schedule
 metadata:
   name: {{ template "odoo.velero.fullname" . }}
+  namespace: {{ .Values.velero.namespace | quote }}
   labels:
     {{- include "odoo.common.labels" . | nindent 4 }}
 spec:

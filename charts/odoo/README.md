@@ -77,10 +77,11 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 | velero.enabled | bool | `false` | enable creation of velero schedule |
 | velero.extraHooks | list | `[]` | additional hooks |
 | velero.includeClusterResources | bool | `false` | see https://velero.io/docs/v1.9/resource-filtering/#--include-cluster-resources |
-| velero.name | string | `"backup"` |  |
+| velero.name | string | `"backup"` | the schedule will be named `namespace-of-deployment-chart-name-name` |
 | velero.pgDumpHook | bool | `true` | automatically take a pg_dump (custom format) of $PGDATABASE to /var/lib/odoo/$PGDATABASE.dump |
 | velero.schedule | string | `"5 6,12,18 * * *"` | schedule to run on |
 | velero.ttl | string | `"336h0m00s"` | backup retention period |
+| velero.veleroNamespace | string | `"velero"` | - backup schedules must exist in the velero namespace, or Velero will not detect the schedule |
 | web.affinity | object | `{}` |  |
 | web.certificate.dnsNames | list | `[]` |  |
 | web.certificate.enabled | bool | `false` | enables cert-manager Certificate creation |

@@ -167,10 +167,6 @@ upgrade fullname
 Velero fullname
 */}}
 {{- define "odoo.velero.fullname" -}}
-{{- if .Values.velero.fullnameOverride }}
-{{- .Values.velero.fullnameOverride | trunc 63 | trimSuffix "-" }}
-{{- else }}
 {{- $name := default .Chart.Name .Values.nameOverride }}
-{{- printf "%s-%s" $name .Values.velero.name | trunc 63 | trimSuffix "-" -}}
-{{- end }}
+{{- printf "%s-%s-%s" .Release.Namespace $name .Values.velero.name | trunc 63 | trimSuffix "-" -}}
 {{- end }}

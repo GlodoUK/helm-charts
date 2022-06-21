@@ -214,6 +214,9 @@ extraManifests: ""
 velero:
   # -- enable creation of velero schedule
   enabled: false
+  # --- backup schedules must exist in the velero namespace, or Velero will not detect the schedule
+  veleroNamespace: "velero"
+  # -- the schedule will be named `namespace-of-deployment-chart-name-name`
   name: "backup"
   # -- see https://velero.io/docs/v1.9/customize-installation/#default-pod-volume-backup-to-restic
   defaultVolumesToRestic: true
