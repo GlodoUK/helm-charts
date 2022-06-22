@@ -221,7 +221,7 @@ velero:
   # -- see https://velero.io/docs/v1.9/customize-installation/#default-pod-volume-backup-to-restic
   defaultVolumesToRestic: true
   # -- see https://velero.io/docs/v1.9/resource-filtering/#--include-cluster-resources
-  includeClusterResources: null
+  includeClusterResources: false
   # -- schedule to run on
   schedule: "5 6,12,18 * * *"
   # -- backup retention period
