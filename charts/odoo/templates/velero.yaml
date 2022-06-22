@@ -1,0 +1,44 @@
+{{ if and .Values.velero .Values.velero.enabled }}
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: {{ template "odoo.velero.fullname" . }}
+  namespace: {{ .Values.velero.veleroNamespace | quote }}
+  labels:
+    {{- include "odoo.common.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.velero.schedule | quote }}
+  template:
+    defaultVolumesToRestic: {{ .Values.velero.defaultVolumesToRestic }}
+    includeClusterResources: {{ .Values.velero.includeClusterResources }}
+    includedNamespaces:
+      - {{ .Release.Namespace }}
+    ttl: {{ .Values.velero.ttl | quote }}
+    {{- if or .Values.velero.pgDumpHook .values.velero.extraHooks }}
+    hooks:
+      resources:
+        {{- if .Values.velero.pgDumpHook }}
+        - name: pgdump
+          labelSelector:
+            matchLabels:
+              {{- include "odoo.web.selectorLabels" . | nindent 14 }}
+          pre:
+            - exec:
+                timeout: 720s
+                command:
+                  - "/bin/bash"
+                  - "-c"
+                  - "/usr/bin/pg_dump $PGDATABASE -Fc -f /var/lib/odoo/$PGDATABASE.dump"
+          post:
+            - exec:
+                timeout: 60s
+                command:
+                  - "/bin/bash"
+                  - "-c"
+                  - "rm /var/lib/odoo/$PGDATABASE.dump"
+        {{- end }}
+        {{- if .Values.velero.extraHooks }}
+        {{ .values.velero.extraHooks | nindent 8 }}
+        {{- end }}
+    {{- end }}
+{{ end }}

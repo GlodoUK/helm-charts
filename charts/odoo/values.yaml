@@ -210,3 +210,23 @@ upgrade:
 
 # -- Use extraManifests (string) to add. This is run through the templating system, and may be useful to create custom additional deployments, statefulsets, etc. that need a "rollme" annotation changed to force redeployment after changes are made.
 extraManifests: ""
+
+velero:
+  # -- enable creation of velero schedule
+  enabled: false
+  # --- backup schedules must exist in the velero namespace, or Velero will not detect the schedule
+  veleroNamespace: "velero"
+  # -- the schedule will be named `namespace-of-deployment-chart-name-name`
+  name: "backup"
+  # -- see https://velero.io/docs/v1.9/customize-installation/#default-pod-volume-backup-to-restic
+  defaultVolumesToRestic: true
+  # -- see https://velero.io/docs/v1.9/resource-filtering/#--include-cluster-resources
+  includeClusterResources: false
+  # -- schedule to run on
+  schedule: "5 6,12,18 * * *"
+  # -- backup retention period
+  ttl: 336h0m00s
+  # -- automatically take a pg_dump (custom format) of $PGDATABASE to /var/lib/odoo/$PGDATABASE.dump
+  pgDumpHook: true
+  # -- additional hooks
+  extraHooks: []
