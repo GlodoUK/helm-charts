@@ -14,7 +14,7 @@ spec:
     includedNamespaces:
       - {{ .Release.Namespace }}
     ttl: {{ .Values.velero.ttl | quote }}
-    {{- if or .Values.velero.pgDumpHook .values.velero.extraHooks }}
+    {{- if or .Values.velero.pgDumpHook .Values.velero.extraHooks }}
     hooks:
       resources:
         {{- if .Values.velero.pgDumpHook }}
@@ -38,7 +38,7 @@ spec:
                   - "rm /var/lib/odoo/$PGDATABASE.dump"
         {{- end }}
         {{- if .Values.velero.extraHooks }}
-        {{ .values.velero.extraHooks | nindent 8 }}
+        {{ .Values.velero.extraHooks | nindent 8 }}
         {{- end }}
     {{- end }}
 {{ end }}
