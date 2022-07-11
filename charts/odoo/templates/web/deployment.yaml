@@ -7,6 +7,8 @@ metadata:
     {{- include "odoo.web.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.web.replicaCount }}
+  strategy:
+    {{- toYaml .Values.web.strategy | nindent 4 }}
   selector:
     matchLabels:
       {{- include "odoo.web.selectorLabels" . | nindent 6 }}

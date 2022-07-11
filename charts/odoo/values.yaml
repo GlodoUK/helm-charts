@@ -85,6 +85,10 @@ web:
   service:
     type: ClusterIP
 
+  # -- kubernetes Deployment strategy, note: queue is always set to Recreate,
+  strategy:
+    type: RollingUpdate
+
   dns:
     # -- enables external-dns CRD (DNSEndpoint) creation
     enabled: false

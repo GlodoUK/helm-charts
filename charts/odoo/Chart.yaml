@@ -14,6 +14,8 @@ maintainers:
     url: https://www.glo.systems/
 
 # XXX: Please remember to bump this on every modification.
-# Due to the fact that this chart is Odoo version agnostic, please use the date
+# Due to the fact that this chart is Odoo version agnostic, please use the form
+# YYYYMMVERSION (i.e. 20220701 for the 1st version in July 2022, 20220702 for
+# the 2nd in July 2022, 20220801 for the 1st version in August 2022, etc.)
 # as the patch part of the version string.
-version: 1.0.20220621
+version: 1.0.20220701
