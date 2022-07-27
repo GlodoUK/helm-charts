@@ -10,7 +10,9 @@ spec:
   selector:
     matchLabels:
       {{- include "odoo.queue.selectorLabels" . | nindent 6 }}
-  template:
+  strategy:
+    type: Recreate
+  template:  
     metadata:
       annotations:
         {{- with .Values.queue.podAnnotations }}
@@ -20,8 +22,6 @@ spec:
       labels:
         {{- include "odoo.queue.selectorLabels" . | nindent 8 }}
     spec:
-      strategy:
-        type: Recreate
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
