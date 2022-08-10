@@ -127,10 +127,19 @@ web:
       secretName: ""
       certResolver: "letsencrypt"
 
+  # -- optional extra volumes
+  extraVolumes: []
+
+  # -- optional extra volume mounts
+  extraVolumeMounts: []
+
   # -- optional extra environment variables
   extraEnv: []
   # - name: DO_STUFF
   #   value: true
+
+  # -- optional extra containers
+  extraContainers: []
 
   resources: {}
     # We usually recommend not to specify default resources and to leave this as a conscious
@@ -174,6 +183,15 @@ queue:
     limit_time_real = 14400
     limit_time_real_cron = 14400
   replicaCount: 1
+
+  # -- optional extra volumes
+  extraVolumes: []
+
+  # -- optional extra volume mounts
+  extraVolumeMounts: []
+
+  # -- optional extra containers
+  extraContainers: []
 
   # -- optional extra environment variables
   extraEnv: []

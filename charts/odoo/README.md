@@ -2,7 +2,7 @@
 
 An opinionated "Bring Your Own Image" Doodba (Odoo) Helm chart for Kubernetes
 
-![Version: 1.0.20220701](https://img.shields.io/badge/Version-1.0.20220701-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 1.0.20220801](https://img.shields.io/badge/Version-1.0.20220801-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 Opinionated odoo Bring Your Own Image chart designed for running [Doodba](https://github.com/Tecnativa/doodba) based Odoo deployments with Glodo defaults.
 
@@ -62,7 +62,10 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 | queue.affinity | object | `{}` |  |
 | queue.config | string | `"[options]\nserver_wide_modules = queue_job\nworkers = 2\nmax_cron_threads = 1\nlimit_memory_soft = 3758096384\nlimit_memory_hard = 4294967296\nlimit_time_cpu = 14400\nlimit_time_real = 14400\nlimit_time_real_cron = 14400\n"` |  |
 | queue.enabled | bool | `false` | enable a second deployment, specifically running oca/queue_job |
+| queue.extraContainers | list | `[]` | optional extra containers |
 | queue.extraEnv | list | `[]` | optional extra environment variables |
+| queue.extraVolumeMounts | list | `[]` | optional extra volume mounts |
+| queue.extraVolumes | list | `[]` | optional extra volumes |
 | queue.name | string | `"queue"` |  |
 | queue.nodeSelector | object | `{}` |  |
 | queue.podAnnotations | object | `{}` |  |
@@ -92,7 +95,10 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 | web.dns.enabled | bool | `false` | enables external-dns CRD (DNSEndpoint) creation |
 | web.dns.endPoints | list | `[]` | must be DNSEndpoint compatible As of time of writing only A, CNAME, TXT and SRV records are supported See: https://github.com/ytsarev/external-dns/blob/master/endpoint/endpoint.go#L27-L36 ```yaml - dnsName: "something.domain"   recordTTL: 60   recordType: A   targets:     - xx.xx.xx.xx ``` |
 | web.enabled | bool | `true` | enable Odoo web worker |
+| web.extraContainers | list | `[]` | optional extra containers |
 | web.extraEnv | list | `[]` | optional extra environment variables |
+| web.extraVolumeMounts | list | `[]` | optional extra volume mounts |
+| web.extraVolumes | list | `[]` | optional extra volumes |
 | web.ingress.annotations | object | `{}` |  |
 | web.ingress.enabled | bool | `true` | enable Traefik IngressRoute creation |
 | web.ingress.entryPoints[0] | string | `"websecure"` |  |

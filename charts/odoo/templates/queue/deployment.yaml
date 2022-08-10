@@ -12,7 +12,7 @@ spec:
       {{- include "odoo.queue.selectorLabels" . | nindent 6 }}
   strategy:
     type: Recreate
-  template:  
+  template:
     metadata:
       annotations:
         {{- with .Values.queue.podAnnotations }}
@@ -46,6 +46,12 @@ spec:
               mountPath: /var/lib/odoo
             - name: odoo-config
               mountPath: "/opt/odoo/custom/conf.d/"
+            {{- if .Values.queue.extraVolumeMounts }}
+            {{- toYaml .Values.queue.extraVolumeMounts | nindent 12 }}
+            {{- end }}
+        {{- if .Values.queue.extraContainers }}
+        {{- toYaml .Values.queue.extraContainers | nindent 8 }}
+        {{- end }}
       {{- with .Values.queue.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -72,5 +78,7 @@ spec:
             items:
               - key: "queue.conf"
                 path: "99-queue.conf"
-
+        {{- if .Values.queue.extraVolumes }}
+        {{- toYaml .Values.queue.extraVolumes | nindent 8 }}
+        {{- end }}
 {{- end }}
