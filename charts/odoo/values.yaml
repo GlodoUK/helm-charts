@@ -13,7 +13,7 @@ image:
   # -- container tag
   tag: ""
   # -- container pullPolicy
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
 
 config:
   # -- sets odoo configuration proxy_mode
