@@ -30,6 +30,14 @@ spec:
         {{- toYaml .Values.web.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Values.web.name }}
+          {{- if .Values.web.probes.livenessProbe.enabled }}
+          livenessProbe:
+            {{- toYaml .Values.web.probes.livenessProbe.values | nindent 12 }}
+          {{- end }}
+          {{- if .Values.web.probes.readinessProbe.enabled }}
+          readinessProbe:
+            {{- toYaml .Values.web.probes.readinessProbe.values | nindent 12 }}
+          {{- end }}
           securityContext:
             {{- toYaml .Values.web.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}"

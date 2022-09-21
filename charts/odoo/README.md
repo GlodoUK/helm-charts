@@ -2,7 +2,7 @@
 
 An opinionated "Bring Your Own Image" Doodba (Odoo) Helm chart for Kubernetes
 
-![Version: 1.0.20220801](https://img.shields.io/badge/Version-1.0.20220801-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 1.0.20220902](https://img.shields.io/badge/Version-1.0.20220902-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 Opinionated odoo Bring Your Own Image chart designed for running [Doodba](https://github.com/Tecnativa/doodba) based Odoo deployments with Glodo defaults.
 
@@ -47,7 +47,7 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 | config.smtp.user | string | `"false"` | sets odoo configuration smtp_user |
 | config.withoutDemo | string | `"true"` | sets odoo configuration without_demo |
 | extraManifests | string | `""` | Use extraManifests (string) to add. This is run through the templating system, and may be useful to create custom additional deployments, statefulsets, etc. that need a "rollme" annotation changed to force redeployment after changes are made. |
-| image.pullPolicy | string | `"Always"` | container pullPolicy |
+| image.pullPolicy | string | `"IfNotPresent"` | container pullPolicy |
 | image.repository | string | `"glodouk/CHANGEME"` | container image |
 | image.tag | string | `""` | container tag |
 | imagePullSecrets | list | `[]` | imagePullSecrets will be propagated to all containers, if set |
@@ -106,10 +106,14 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 | web.ingress.middlewares | list | `[]` |  |
 | web.ingress.tls.certResolver | string | `"letsencrypt"` |  |
 | web.ingress.tls.secretName | string | `""` |  |
+| web.livenessProbe.enabled | bool | `false` | enable livenessProbe |
+| web.livenessProbe.values | object | `{"initialDelaySeconds":60,"periodSeconds":60,"tcpSocket":{"port":"http"},"timeoutSeconds":60}` | livenessProbe configuration, note that /web/health did not until mid-way through the 15.0 release, therefore we suggest tcpSocket |
 | web.name | string | `"web"` |  |
 | web.nodeSelector | object | `{}` |  |
 | web.podAnnotations | object | `{}` |  |
 | web.podSecurityContext | object | `{}` |  |
+| web.readinessProbe.enabled | bool | `false` | enable readinessProbe |
+| web.readinessProbe.values | object | `{"initialDelaySeconds":60,"periodSeconds":60,"tcpSocket":{"port":"http"},"timeoutSeconds":60}` | readinessProbe configuration, note that /web/health did not until mid-way through the 15.0 release, therefore we suggest tcpSocket |
 | web.replicaCount | int | `1` |  |
 | web.resources | object | `{}` |  |
 | web.securityContext | object | `{}` |  |

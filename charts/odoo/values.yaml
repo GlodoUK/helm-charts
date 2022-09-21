@@ -127,6 +127,28 @@ web:
       secretName: ""
       certResolver: "letsencrypt"
 
+  livenessProbe:
+    # -- enable livenessProbe
+    enabled: false
+    # -- livenessProbe configuration, note that /web/health did not until mid-way through the 15.0 release, therefore we suggest tcpSocket
+    values:
+      tcpSocket:
+        port: http
+      initialDelaySeconds: 60
+      periodSeconds: 60
+      timeoutSeconds: 60
+
+  readinessProbe:
+    # -- enable readinessProbe
+    enabled: false
+    # -- readinessProbe configuration, note that /web/health did not until mid-way through the 15.0 release, therefore we suggest tcpSocket
+    values:
+      tcpSocket:
+        port: http
+      initialDelaySeconds: 60
+      periodSeconds: 60
+      timeoutSeconds: 60
+
   # -- optional extra volumes
   extraVolumes: []
 
