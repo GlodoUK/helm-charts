@@ -2,7 +2,7 @@
 
 An opinionated "Bring Your Own Image" Doodba (Odoo) Helm chart for Kubernetes
 
-![Version: 1.0.20220801](https://img.shields.io/badge/Version-1.0.20220801-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 1.0.20221001](https://img.shields.io/badge/Version-1.0.20221001-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 Opinionated odoo Bring Your Own Image chart designed for running [Doodba](https://github.com/Tecnativa/doodba) based Odoo deployments with Glodo defaults.
 
@@ -47,7 +47,7 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 | config.smtp.user | string | `"false"` | sets odoo configuration smtp_user |
 | config.withoutDemo | string | `"true"` | sets odoo configuration without_demo |
 | extraManifests | string | `""` | Use extraManifests (string) to add. This is run through the templating system, and may be useful to create custom additional deployments, statefulsets, etc. that need a "rollme" annotation changed to force redeployment after changes are made. |
-| image.pullPolicy | string | `"Always"` | container pullPolicy |
+| image.pullPolicy | string | `"IfNotPresent"` | container pullPolicy |
 | image.repository | string | `"glodouk/CHANGEME"` | container image |
 | image.tag | string | `""` | container tag |
 | imagePullSecrets | list | `[]` | imagePullSecrets will be propagated to all containers, if set |
@@ -74,6 +74,7 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 | queue.resources | object | `{}` |  |
 | queue.securityContext | object | `{}` |  |
 | queue.tolerations | list | `[]` |  |
+| rollme | bool | `false` | - if true, a "rollme" annotation will be written to deployment manifests, that always changes every upgrade. If you do not tag your images this will be required to swap the container image |
 | upgrade.enabled | bool | `true` | enable click-odoo-update on helm chart upgrade |
 | upgrade.name | string | `"upgrade"` |  |
 | velero.defaultVolumesToRestic | bool | `true` | see https://velero.io/docs/v1.9/customize-installation/#default-pod-volume-backup-to-restic |
