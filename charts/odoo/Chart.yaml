@@ -18,4 +18,4 @@ maintainers:
 # YYYYMMVERSION (i.e. 20220701 for the 1st version in July 2022, 20220702 for
 # the 2nd in July 2022, 20220801 for the 1st version in August 2022, etc.)
 # as the patch part of the version string.
-version: 1.0.20221101
+version: 1.0.20221102
