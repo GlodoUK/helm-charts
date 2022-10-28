@@ -107,10 +107,14 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 | web.ingress.middlewares | list | `[]` |  |
 | web.ingress.tls.certResolver | string | `"letsencrypt"` |  |
 | web.ingress.tls.secretName | string | `""` |  |
+| web.livenessProbe.enabled | bool | `false` | enable livenessProbe |
+| web.livenessProbe.values | object | `{"initialDelaySeconds":60,"periodSeconds":60,"tcpSocket":{"port":"http"},"timeoutSeconds":60}` | livenessProbe configuration, note that /web/health did not until mid-way through the 15.0 release, therefore we suggest tcpSocket |
 | web.name | string | `"web"` |  |
 | web.nodeSelector | object | `{}` |  |
 | web.podAnnotations | object | `{}` |  |
 | web.podSecurityContext | object | `{}` |  |
+| web.readinessProbe.enabled | bool | `false` | enable readinessProbe |
+| web.readinessProbe.values | object | `{"initialDelaySeconds":60,"periodSeconds":60,"tcpSocket":{"port":"http"},"timeoutSeconds":60}` | readinessProbe configuration, note that /web/health did not until mid-way through the 15.0 release, therefore we suggest tcpSocket |
 | web.replicaCount | int | `1` |  |
 | web.resources | object | `{}` |  |
 | web.securityContext | object | `{}` |  |
