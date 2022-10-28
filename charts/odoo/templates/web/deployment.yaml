@@ -18,7 +18,9 @@ spec:
         {{- with .Values.web.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        {{- if .Values.rollme }}
         rollme: {{ randAlphaNum 5 | quote }}
+        {{- end }}
       labels:
         {{- include "odoo.web.selectorLabels" . | nindent 8 }}
     spec:

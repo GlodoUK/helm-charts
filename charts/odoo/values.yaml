@@ -7,6 +7,9 @@ nameOverride: ""
 # -- imagePullSecrets will be propagated to all containers, if set
 imagePullSecrets: []
 
+# --- if true, a "rollme" annotation will be written to deployment manifests, that always changes every upgrade. If you do not tag your images this will be required to swap the container image
+rollme: false
+
 image:
   # -- container image
   repository: glodouk/CHANGEME
