@@ -5,7 +5,7 @@ kind: Certificate
 metadata:
   name: {{ $fullname }}
 spec:
-  secretName: {{ $fullname }}
+  secretName: {{ .Values.web.certificate.secretName }}
   dnsNames:
     {{- toYaml .Values.web.certificate.dnsNames | nindent 4 }}
   issuerRef:

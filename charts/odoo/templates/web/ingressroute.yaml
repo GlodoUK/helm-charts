@@ -1,4 +1,4 @@
-{{- if and .Values.web.enabled .Values.web.ingress.enabled }}
+{{- if and .Values.web.enabled .Values.web.ingress.enabled (eq .Values.web.ingress.type "IngressRoute") }}
 {{- $fullname := include "odoo.web.fullname" . -}}
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
@@ -30,14 +30,14 @@ spec:
       port: 8072
   {{- if .Values.web.certificate.enabled }}
   tls:
-    secretName: {{ $fullname }}
+    secretName: {{ .Values.web.certificate.secretName }}
   {{- end }}
-  {{- if and (not .Values.web.certificate.enabled) (or .Values.web.ingress.tls.secretName .Values.web.ingress.tls.certResolver) }}
+  {{- else if (or .Values.web.ingress.tls.secretName .Values.web.ingress.tls.certResolver) }}
   tls:
   {{- if .Values.web.ingress.tls.secretName }}
-    secretName: {{ .Values.web.ingress.tls.secret }}
+    secretName: {{ .Values.web.ingress.tls.secretName }}
   {{- end }}
-  {{- if .Values.web.ingress.tls.certResolver }}
+  {{- if and (not .Values.web.certificate.enabled) .Values.web.ingress.tls.certResolver }}
     certResolver: {{ .Values.web.ingress.tls.certResolver }}
   {{- end }}
   {{- end }}
