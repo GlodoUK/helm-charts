@@ -17,21 +17,34 @@ spec:
   - match: {{ .Values.web.ingress.match }}
     kind: Rule
     middlewares:
-      {{- toYaml .Values.web.ingress.middlewares | nindent 6 }}
+      {{- range .Values.web.ingress.middlewares }}
+      - name: {{ .name }}
+        namespace: {{ .namespace }}
+      {{- end }}
+      {{- if .Values.web.ingress.compress }}
+      - name: {{ template "odoo.web.fullname" . }}-compress
+        namespace: {{ .Release.Namespace }}
+      {{- end }}
     services:
     - name: {{ $fullname }}
       port: 8069
   - match: ({{ .Values.web.ingress.match }}) && PathPrefix(`/longpolling/`)
     kind: Rule
     middlewares:
-      {{- toYaml .Values.web.ingress.middlewares | nindent 6 }}
+      {{- range .Values.web.ingress.middlewares }}
+      - name: {{ .name }}
+        namespace: {{ .namespace }}
+      {{- end }}
+      {{- if .Values.web.ingress.compress }}
+      - name: {{ template "odoo.web.fullname" . }}-compress
+        namespace: {{ .Release.Namespace }}
+      {{- end }}
     services:
     - name: {{ $fullname }}
       port: 8072
   {{- if .Values.web.certificate.enabled }}
   tls:
     secretName: {{ .Values.web.certificate.secretName }}
-  {{- end }}
   {{- else if (or .Values.web.ingress.tls.secretName .Values.web.ingress.tls.certResolver) }}
   tls:
   {{- if .Values.web.ingress.tls.secretName }}

@@ -34,7 +34,7 @@ spec:
             if [ "$( psql -XtAc "SELECT 1 FROM pg_database WHERE datname='$PGDATABASE'" )" = '1' ]
             then
               echo "Database $PGDATABASE exists, running click-odoo-update"
-              click-odoo-update --ignore-core-addons
+              click-odoo-update {{ .Values.upgrade.clickArgs }}
             else
               echo "Database $PGDATABASE does not exist, skipping click-odoo-upgrade"
             fi

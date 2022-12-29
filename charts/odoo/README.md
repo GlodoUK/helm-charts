@@ -75,6 +75,7 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 | queue.securityContext | object | `{}` |  |
 | queue.tolerations | list | `[]` |  |
 | rollme | bool | `false` | - if true, a "rollme" annotation will be written to deployment manifests, that always changes every upgrade. If you do not tag your images this will be required to swap the container image |
+| upgrade.clickArgs | string | `"--ignore-core-addons"` | customisable arguments for click-odoo-update |
 | upgrade.enabled | bool | `true` | enable click-odoo-update on helm chart upgrade |
 | upgrade.name | string | `"upgrade"` |  |
 | velero.defaultVolumesToRestic | bool | `true` | see https://velero.io/docs/v1.9/customize-installation/#default-pod-volume-backup-to-restic |
@@ -101,13 +102,14 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 | web.extraVolumeMounts | list | `[]` | optional extra volume mounts |
 | web.extraVolumes | list | `[]` | optional extra volumes |
 | web.ingress.annotations | object | `{}` | extra annotations passed to Ingress or IngressRoute, if type is IngressRoute |
+| web.ingress.compress | bool | `false` | Automatically create a Traefik compress middleware |
 | web.ingress.enabled | bool | `true` | enable Ingress or Traefik IngressRoute creation |
 | web.ingress.entryPoints | list | `["websecure"]` | if type is IngressRoute then the IngressRoute entryPoint, if type is Ingress then it will automatically set the entrypoint annotation |
-| web.ingress.hosts | list | `[]` | if type is Ingress then a list of host names to match, if not using certificate CRD then also used for tls host names |
+| web.ingress.hosts | list | `["chart-example.local"]` | if type is Ingress then a list of host names to match, if not using certificate CRD then also used for tls host names |
 | web.ingress.match | string | `"Host(`chart-example.local`)"` | if type is IngressRoute then a string of IngressRoute compatible matches |
 | web.ingress.middlewares | list | `[]` | if type is IngressRoute then Traefik Middlewares, if type is Ingress then it will automatically set Ingress annotations |
 | web.ingress.tls | object | `{"certResolver":"letsencrypt","secretName":""}` | tls options |
-| web.ingress.type | string | `"IngressRoute"` | Traefik IngressRoute or standard Ingress |
+| web.ingress.type | string | `"IngressRoute"` | IngressRoute or Ingress, when set to IngressRoute will render an Traefik IngressRoute |
 | web.livenessProbe.enabled | bool | `false` | enable livenessProbe |
 | web.livenessProbe.values | object | `{"initialDelaySeconds":60,"periodSeconds":60,"tcpSocket":{"port":"http"},"timeoutSeconds":60}` | livenessProbe configuration, note that /web/health did not until mid-way through the 15.0 release, therefore we suggest tcpSocket |
 | web.name | string | `"web"` |  |

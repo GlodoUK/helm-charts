@@ -7,14 +7,16 @@ metadata:
   labels:
     {{- include "odoo.common.labels" . | nindent 4 }}
   annotations:
-    {{- toYaml .Values.web.ingress.annotations | nident 4 }}
+    {{- if .Values.web.ingress.annotations }}
+    {{- toYaml .Values.web.ingress.annotations | nindent 4 }}
+    {{- end }}
     {{- if .Values.web.ingress.entryPoints }}
     traefik.ingress.kubernetes.io/router.entrypoints: {{ join "," .Values.web.ingress.entryPoints }}
     {{- end }}
     {{- if or .Values.web.certificate.enabled (and .Values.web.ingress.tls.secretName .Values.web.ingress.tls.certResolver) }}
     traefik.ingress.kubernetes.io/router.tls: "true"
     {{- end }}
-    {{- if .Values.web.ingress.middlewares }}
+    {{- if or .Values.web.ingress.middlewares .Values.web.ingress.compress }}
     traefik.ingress.kubernetes.io/router.middlewares: {{ include "odoo.web.traefikMiddlewaresAsAnnotation" . }}
     {{- end }}
 spec:
