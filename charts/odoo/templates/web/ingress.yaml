@@ -1,0 +1,59 @@
+{{- if and .Values.web.enabled .Values.web.ingress.enabled (eq .Values.web.ingress.type "Ingress") }}
+{{- $fullname := include "odoo.web.fullname" . -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $fullname }}
+  labels:
+    {{- include "odoo.common.labels" . | nindent 4 }}
+  annotations:
+    {{- if .Values.web.ingress.annotations }}
+    {{- toYaml .Values.web.ingress.annotations | nindent 4 }}
+    {{- end }}
+    {{- if .Values.web.ingress.entryPoints }}
+    traefik.ingress.kubernetes.io/router.entrypoints: {{ join "," .Values.web.ingress.entryPoints }}
+    {{- end }}
+    {{- if or .Values.web.certificate.enabled (and .Values.web.ingress.tls.secretName .Values.web.ingress.tls.certResolver) }}
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    {{- end }}
+    {{- if or .Values.web.ingress.middlewares .Values.web.ingress.compress }}
+    traefik.ingress.kubernetes.io/router.middlewares: {{ include "odoo.web.traefikMiddlewaresAsAnnotation" . }}
+    {{- end }}
+spec:
+  rules:
+  {{- range .Values.web.ingress.hosts }}
+  - host: {{ . }}
+    http:
+      paths:
+      - web:
+          service:
+            name: {{ $fullname }}
+            port:
+              number: 8069
+        path: /
+        pathType: Prefix
+
+      - longpolling:
+          service:
+            name: {{ $fullname }}
+            port:
+              number: 8072
+        path: /longpolling/
+        pathType: Prefix
+  {{- end }}
+
+  {{- if or .Values.web.certificate.enabled (and .Values.web.ingress.tls .Values.web.ingress.tls.secretName .Values.web.ingress.tls.certResolver) }}
+  tls:
+    - hosts:
+        {{- if .Values.web.certificate.enabled }}
+        {{- toYaml .Values.web.certificate.dnsNames | nindent 8 }}
+        {{- else if .Values.web.ingress.hosts }}
+        {{- toYaml .Values.web.ingress.hosts | nindent 8 }}
+        {{- end }}
+      {{- if .Values.web.certificate.enabled }}
+      secretName: {{ .Values.web.certificate.secretName }}
+      {{- else if and .Values.web.ingress.tls .Values.web.ingress.tls.secretName }}
+      secretName: {{ .Values.web.ingress.tls.secretName }}
+      {{- end }}
+  {{- end }}
+{{- end }}

@@ -107,6 +107,21 @@ component: {{ .Values.web.name | quote }}
 {{- end }}
 
 {{/*
+Traefik Middlewares as Annotation
+*/}}
+{{- define "odoo.web.traefikMiddlewaresAsAnnotation" -}}
+{{- $list := list }}
+{{- range .Values.web.ingress.middlewares }}
+{{- $list = append $list (printf "%s-%s@kubernetescrd" .namespace .name) }}
+{{- end }}
+{{- if .Values.web.ingress.compress }}
+{{- $fullname := include "odoo.web.fullname" .}}
+{{- $list = append $list (printf "%s-%s-compress@kubernetescrd" .Release.Namespace $fullname ) }}
+{{- end }}
+{{- join ", " $list }}
+{{- end }}
+
+{{/*
 Queue fullname
 */}}
 {{- define "odoo.queue.fullname" -}}

@@ -1,0 +1,8 @@
+{{- if and .Values.web.enabled .Values.web.ingress.compress }}
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ template "odoo.web.fullname" . }}-compress
+spec:
+  compress: {}
+{{- end }}

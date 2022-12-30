@@ -108,24 +108,42 @@ web:
     endPoints: []
 
   certificate:
-    # -- enables cert-manager Certificate creation
+    # -- enables cert-manager Certificate CRD creation
     enabled: false
-    secretName: "odoo-web-certificate"
+    secretName: "odoo-web"
     dnsNames: []
     issuerRef:
       name: letsencrypt
       kind: ClusterIssuer
 
   ingress:
-    # -- enable Traefik IngressRoute creation
+    # -- enable Ingress or Traefik IngressRoute creation
     enabled: true
+
+    # -- IngressRoute or Ingress, when set to IngressRoute will render an Traefik IngressRoute
+    type: "IngressRoute"
+
+    # -- extra annotations passed to Ingress or IngressRoute, if type is IngressRoute
+    annotations: {}
+
+    # -- if type is IngressRoute then the IngressRoute entryPoint, if type is Ingress then it will automatically set the entrypoint annotation
     entryPoints:
       - websecure
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
+
+    # -- if type is IngressRoute then a string of IngressRoute compatible matches
     match: Host(`chart-example.local`)
+
+    # -- if type is Ingress then a list of host names to match, if not using certificate CRD then also used for tls host names
+    hosts:
+      - chart-example.local
+
+    # -- if type is IngressRoute then Traefik Middlewares, if type is Ingress then it will automatically set Ingress annotations
     middlewares: []
+
+    # -- Automatically create a Traefik compress middleware
+    compress: false
+
+    # -- tls options
     tls:
       secretName: ""
       certResolver: "letsencrypt"
@@ -254,6 +272,8 @@ upgrade:
   # -- enable click-odoo-update on helm chart upgrade
   enabled: true
   name: "upgrade"
+  # -- customisable arguments for click-odoo-update
+  clickArgs: "--ignore-core-addons"
 
 # -- Use extraManifests (string) to add. This is run through the templating system, and may be useful to create custom additional deployments, statefulsets, etc. that need a "rollme" annotation changed to force redeployment after changes are made.
 extraManifests: ""

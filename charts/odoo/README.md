@@ -2,7 +2,7 @@
 
 An opinionated "Bring Your Own Image" Doodba (Odoo) Helm chart for Kubernetes
 
-![Version: 1.0.20221102](https://img.shields.io/badge/Version-1.0.20221102-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 1.0.20221229](https://img.shields.io/badge/Version-1.0.20221229-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 Opinionated odoo Bring Your Own Image chart designed for running [Doodba](https://github.com/Tecnativa/doodba) based Odoo deployments with Glodo defaults.
 
@@ -75,6 +75,7 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 | queue.securityContext | object | `{}` |  |
 | queue.tolerations | list | `[]` |  |
 | rollme | bool | `false` | - if true, a "rollme" annotation will be written to deployment manifests, that always changes every upgrade. If you do not tag your images this will be required to swap the container image |
+| upgrade.clickArgs | string | `"--ignore-core-addons"` | customisable arguments for click-odoo-update |
 | upgrade.enabled | bool | `true` | enable click-odoo-update on helm chart upgrade |
 | upgrade.name | string | `"upgrade"` |  |
 | velero.defaultVolumesToRestic | bool | `true` | see https://velero.io/docs/v1.9/customize-installation/#default-pod-volume-backup-to-restic |
@@ -88,10 +89,10 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 | velero.veleroNamespace | string | `"velero"` | - backup schedules must exist in the velero namespace, or Velero will not detect the schedule |
 | web.affinity | object | `{}` |  |
 | web.certificate.dnsNames | list | `[]` |  |
-| web.certificate.enabled | bool | `false` | enables cert-manager Certificate creation |
+| web.certificate.enabled | bool | `false` | enables cert-manager Certificate CRD creation |
 | web.certificate.issuerRef.kind | string | `"ClusterIssuer"` |  |
 | web.certificate.issuerRef.name | string | `"letsencrypt"` |  |
-| web.certificate.secretName | string | `"odoo-web-certificate"` |  |
+| web.certificate.secretName | string | `"odoo-web"` |  |
 | web.config | string | `"[options]\nlimit_memory_soft = 3758096384\nlimit_memory_hard = 4294967296\nlimit_time_cpu = 360\nlimit_time_real = 360\nlimit_time_real_cron = 360\nmax_cron_threads = 1\nworkers = 5\nlongpolling_port = 8072\n"` | through environment variables |
 | web.dns.enabled | bool | `false` | enables external-dns CRD (DNSEndpoint) creation |
 | web.dns.endPoints | list | `[]` | must be DNSEndpoint compatible As of time of writing only A, CNAME, TXT and SRV records are supported See: https://github.com/ytsarev/external-dns/blob/master/endpoint/endpoint.go#L27-L36 ```yaml - dnsName: "something.domain"   recordTTL: 60   recordType: A   targets:     - xx.xx.xx.xx ``` |
@@ -100,13 +101,15 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 | web.extraEnv | list | `[]` | optional extra environment variables |
 | web.extraVolumeMounts | list | `[]` | optional extra volume mounts |
 | web.extraVolumes | list | `[]` | optional extra volumes |
-| web.ingress.annotations | object | `{}` |  |
-| web.ingress.enabled | bool | `true` | enable Traefik IngressRoute creation |
-| web.ingress.entryPoints[0] | string | `"websecure"` |  |
-| web.ingress.match | string | `"Host(`chart-example.local`)"` |  |
-| web.ingress.middlewares | list | `[]` |  |
-| web.ingress.tls.certResolver | string | `"letsencrypt"` |  |
-| web.ingress.tls.secretName | string | `""` |  |
+| web.ingress.annotations | object | `{}` | extra annotations passed to Ingress or IngressRoute, if type is IngressRoute |
+| web.ingress.compress | bool | `false` | Automatically create a Traefik compress middleware |
+| web.ingress.enabled | bool | `true` | enable Ingress or Traefik IngressRoute creation |
+| web.ingress.entryPoints | list | `["websecure"]` | if type is IngressRoute then the IngressRoute entryPoint, if type is Ingress then it will automatically set the entrypoint annotation |
+| web.ingress.hosts | list | `["chart-example.local"]` | if type is Ingress then a list of host names to match, if not using certificate CRD then also used for tls host names |
+| web.ingress.match | string | `"Host(`chart-example.local`)"` | if type is IngressRoute then a string of IngressRoute compatible matches |
+| web.ingress.middlewares | list | `[]` | if type is IngressRoute then Traefik Middlewares, if type is Ingress then it will automatically set Ingress annotations |
+| web.ingress.tls | object | `{"certResolver":"letsencrypt","secretName":""}` | tls options |
+| web.ingress.type | string | `"IngressRoute"` | IngressRoute or Ingress, when set to IngressRoute will render an Traefik IngressRoute |
 | web.livenessProbe.enabled | bool | `false` | enable livenessProbe |
 | web.livenessProbe.values | object | `{"initialDelaySeconds":60,"periodSeconds":60,"tcpSocket":{"port":"http"},"timeoutSeconds":60}` | livenessProbe configuration, note that /web/health did not until mid-way through the 15.0 release, therefore we suggest tcpSocket |
 | web.name | string | `"web"` |  |
