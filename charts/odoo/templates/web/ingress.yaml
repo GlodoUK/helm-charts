@@ -25,7 +25,7 @@ spec:
   - host: {{ . }}
     http:
       paths:
-      - web:
+      - backend:
           service:
             name: {{ $fullname }}
             port:
@@ -33,7 +33,7 @@ spec:
         path: /
         pathType: Prefix
 
-      - longpolling:
+      - backend:
           service:
             name: {{ $fullname }}
             port:
