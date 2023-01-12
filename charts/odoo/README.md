@@ -10,12 +10,11 @@ Includes support for:
   * Custom config, through both file and env var
   * Multi deployment and replica (i.e. web, cron, and OCA/queue may be all run as separate deployments)
   * [external-dns CRD](https://github.com/kubernetes-sigs/external-dns) support
-  * Traefik IngressRoute (standard Ingress is currently not available)
-  * Automatic running of [click-odoo-update](https://github.com/acsone/click-odoo-contrib#click-odoo-update-stable)
+  * Support for both Traefik IngressRoute and standard Ingress
+  * Automatic running of [click-odoo-update](https://github.com/acsone/click-odoo-contrib#click-odoo-update-stable) via pre-upgrade hook
 
 Future plans include:
   * Optionally automatically scaling down before click-odoo-update, and then back up
-  * Standard Ingress support
 
 ## Installing the Chart
 
