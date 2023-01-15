@@ -211,13 +211,102 @@ web:
     # runAsNonRoot: true
     # runAsUser: 1000
 
+longpolling:
+  # -- enable a separate longpolling instance, both web and longpolling must be enabled
+  enabled: false
+  name: "longpolling"
+
+  # -- optional extra configuration options that Doodba does not allow to be set
+  # -- through environment variables
+  config: |
+    [options]
+    limit_memory_soft = 3758096384
+    limit_memory_hard = 4294967296
+    limit_time_cpu = 360
+    limit_time_real = 360
+    limit_time_real_cron = 360
+    max_cron_threads = 0
+    workers = 5
+    longpolling_port = 8072
+
+  replicaCount: 1
+  service:
+    type: ClusterIP
+
+  # -- kubernetes Deployment strategy, note: queue is always set to Recreate,
+  strategy:
+    type: RollingUpdate
+
+  # -- optional extra volumes
+  extraVolumes: []
+
+  # -- optional extra volume mounts
+  extraVolumeMounts: []
+
+  # -- optional extra containers
+  extraContainers: []
+
+  # -- optional extra environment variables
+  extraEnv: []
+  # - name: DO_STUFF
+  #   value: true
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1
+
+  livenessProbe:
+    # -- enable livenessProbe
+    enabled: false
+    # -- livenessProbe configuration, note that /web/health did not until mid-way through the 15.0 release, therefore we suggest tcpSocket
+    values:
+      tcpSocket:
+        port: longpolling
+      initialDelaySeconds: 60
+      periodSeconds: 60
+      timeoutSeconds: 60
+
+  readinessProbe:
+    # -- enable readinessProbe
+    enabled: false
+    # -- readinessProbe configuration, note that /web/health did not until mid-way through the 15.0 release, therefore we suggest tcpSocket
+    values:
+      tcpSocket:
+        port: longpolling
+      initialDelaySeconds: 60
+      periodSeconds: 60
+      timeoutSeconds: 60
+
 queue:
   # -- enable a second deployment, specifically running oca/queue_job
   enabled: false
   name: "queue"
   config: |
     [options]
-    server_wide_modules = queue_job
+    server_wide_modules = queue_job,web
     workers = 2
     max_cron_threads = 1
     limit_memory_soft = 3758096384
@@ -225,6 +314,7 @@ queue:
     limit_time_cpu = 14400
     limit_time_real = 14400
     limit_time_real_cron = 14400
+
   replicaCount: 1
 
   # -- optional extra volumes

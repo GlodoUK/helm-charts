@@ -1,85 +1,81 @@
-{{- if .Values.web.enabled -}}
+{{- if and .Values.web.enabled .Values.longpolling.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "odoo.web.fullname" . }}
+  name: {{ include "odoo.longpolling.fullname" . }}
   labels:
-    {{- include "odoo.web.labels" . | nindent 4 }}
+    {{- include "odoo.longpolling.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.web.replicaCount }}
+  replicas: {{ .Values.longpolling.replicaCount }}
   strategy:
-    {{- toYaml .Values.web.strategy | nindent 4 }}
+    {{- toYaml .Values.longpolling.strategy | nindent 4 }}
   selector:
     matchLabels:
-      {{- include "odoo.web.selectorLabels" . | nindent 6 }}
+      {{- include "odoo.longpolling.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
-        {{- with .Values.web.podAnnotations }}
+        {{- with .Values.longpolling.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
         {{- if .Values.rollme }}
         rollme: {{ randAlphaNum 5 | quote }}
         {{- end }}
       labels:
-        {{- include "odoo.web.selectorLabels" . | nindent 8 }}
+        {{- include "odoo.longpolling.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.web.podSecurityContext | nindent 8 }}
+        {{- toYaml .Values.longpolling.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Values.web.name }}
-          {{- if .Values.web.livenessProbe.enabled }}
+        - name: {{ .Values.longpolling.name }}
+          {{- if .Values.longpolling.livenessProbe.enabled }}
           livenessProbe:
-            {{- toYaml .Values.web.livenessProbe.values | nindent 12 }}
+            {{- toYaml .Values.longpolling.livenessProbe.values | nindent 12 }}
           {{- end }}
-          {{- if .Values.web.readinessProbe.enabled }}
+          {{- if .Values.longpolling.readinessProbe.enabled }}
           readinessProbe:
-            {{- toYaml .Values.web.readinessProbe.values | nindent 12 }}
+            {{- toYaml .Values.longpolling.readinessProbe.values | nindent 12 }}
           {{- end }}
           securityContext:
-            {{- toYaml .Values.web.securityContext | nindent 12 }}
+            {{- toYaml .Values.longpolling.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}"
+          args: ["odoo", "gevent"]
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-            {{- if .Values.web.extraEnv }}
-              {{- toYaml .Values.web.extraEnv | nindent 12 }}
+            {{- if .Values.longpolling.extraEnv }}
+              {{- toYaml .Values.longpolling.extraEnv | nindent 12 }}
             {{- end }}
             {{- include "odoo.common.env" . | nindent 12 }}
           ports:
-            - name: http
-              containerPort: 8069
-              protocol: TCP
-            {{- if not .Values.longpolling.enabled }}
             - name: longpolling
               containerPort: 8072
               protocol: TCP
-            {{- end }}
           resources:
-            {{- toYaml .Values.web.resources | nindent 12 }}
+            {{- toYaml .Values.longpolling.resources | nindent 12 }}
           volumeMounts:
             - name: odoo-data
               mountPath: /var/lib/odoo
             - name: odoo-config
               mountPath: "/opt/odoo/custom/conf.d/"
-            {{- if .Values.web.extraVolumeMounts }}
-            {{- toYaml .Values.web.extraVolumeMounts | nindent 12 }}
+            {{- if .Values.longpolling.extraVolumeMounts }}
+            {{- toYaml .Values.longpolling.extraVolumeMounts | nindent 12 }}
             {{- end }}
-        {{- if .Values.web.extraContainers }}
-        {{- toYaml .Values.web.extraContainers | nindent 8 }}
+        {{- if .Values.longpolling.extraContainers }}
+        {{- toYaml .Values.longpolling.extraContainers | nindent 8 }}
         {{- end }}
-      {{- with .Values.web.nodeSelector }}
+      {{- with .Values.longpolling.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.web.affinity }}
+      {{- with .Values.longpolling.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.web.tolerations }}
+      {{- with .Values.longpolling.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -95,9 +91,9 @@ spec:
           configMap:
             name: {{ include "odoo.config.fullname" . }}
             items:
-              - key: "web.conf"
-                path: "99-web.conf"
-        {{- if .Values.web.extraVolumes }}
-        {{- toYaml .Values.web.extraVolumes | nindent 8 }}
+              - key: "longpolling.conf"
+                path: "99-longpolling.conf"
+        {{- if .Values.longpolling.extraVolumes }}
+        {{- toYaml .Values.longpolling.extraVolumes | nindent 8 }}
         {{- end }}
 {{- end }}

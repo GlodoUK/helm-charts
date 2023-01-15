@@ -40,8 +40,13 @@ spec:
         namespace: {{ .Release.Namespace }}
       {{- end }}
     services:
+    {{- if .Values.longpolling.enabled }}
+    - name: {{ include "odoo.longpolling.fullname" . }}
+      port: 8072
+    {{- else }}
     - name: {{ $fullname }}
       port: 8072
+    {{- end }}
   {{- if .Values.web.certificate.enabled }}
   tls:
     secretName: {{ .Values.web.certificate.secretName }}

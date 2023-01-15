@@ -2,7 +2,7 @@
 
 An opinionated "Bring Your Own Image" Doodba (Odoo) Helm chart for Kubernetes
 
-![Version: 1.0.20221229](https://img.shields.io/badge/Version-1.0.20221229-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 1.0.20230101](https://img.shields.io/badge/Version-1.0.20230101-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 Opinionated odoo Bring Your Own Image chart designed for running [Doodba](https://github.com/Tecnativa/doodba) based Odoo deployments with Glodo defaults.
 
@@ -10,8 +10,9 @@ Includes support for:
   * Custom config, through both file and env var
   * Multi deployment and replica (i.e. web, cron, and OCA/queue may be all run as separate deployments)
   * [external-dns CRD](https://github.com/kubernetes-sigs/external-dns) support
-  * Support for both Traefik IngressRoute and standard Ingress
-  * Automatic running of [click-odoo-update](https://github.com/acsone/click-odoo-contrib#click-odoo-update-stable) via pre-upgrade hook
+  * [cert-manager](https://cert-manager.io/) CRD support
+  * Both Traefik IngressRoute and Ingress
+  * Automatic running of [click-odoo-update](https://github.com/acsone/click-odoo-contrib#click-odoo-update-stable)
 
 Future plans include:
   * Optionally automatically scaling down before click-odoo-update, and then back up
@@ -50,6 +51,27 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 | image.repository | string | `"glodouk/CHANGEME"` | container image |
 | image.tag | string | `""` | container tag |
 | imagePullSecrets | list | `[]` | imagePullSecrets will be propagated to all containers, if set |
+| longpolling.affinity | object | `{}` |  |
+| longpolling.config | string | `"[options]\nlimit_memory_soft = 3758096384\nlimit_memory_hard = 4294967296\nlimit_time_cpu = 360\nlimit_time_real = 360\nlimit_time_real_cron = 360\nmax_cron_threads = 0\nworkers = 5\nlongpolling_port = 8072\n"` | through environment variables |
+| longpolling.enabled | bool | `false` | enable a separate longpolling instance, both web and longpolling must be enabled |
+| longpolling.extraContainers | list | `[]` | optional extra containers |
+| longpolling.extraEnv | list | `[]` | optional extra environment variables |
+| longpolling.extraVolumeMounts | list | `[]` | optional extra volume mounts |
+| longpolling.extraVolumes | list | `[]` | optional extra volumes |
+| longpolling.livenessProbe.enabled | bool | `false` | enable livenessProbe |
+| longpolling.livenessProbe.values | object | `{"initialDelaySeconds":60,"periodSeconds":60,"tcpSocket":{"port":"longpolling"},"timeoutSeconds":60}` | livenessProbe configuration, note that /web/health did not until mid-way through the 15.0 release, therefore we suggest tcpSocket |
+| longpolling.name | string | `"longpolling"` |  |
+| longpolling.nodeSelector | object | `{}` |  |
+| longpolling.podAnnotations | object | `{}` |  |
+| longpolling.podSecurityContext | object | `{}` |  |
+| longpolling.readinessProbe.enabled | bool | `false` | enable readinessProbe |
+| longpolling.readinessProbe.values | object | `{"initialDelaySeconds":60,"periodSeconds":60,"tcpSocket":{"port":"longpolling"},"timeoutSeconds":60}` | readinessProbe configuration, note that /web/health did not until mid-way through the 15.0 release, therefore we suggest tcpSocket |
+| longpolling.replicaCount | int | `1` |  |
+| longpolling.resources | object | `{}` |  |
+| longpolling.securityContext | object | `{}` |  |
+| longpolling.service.type | string | `"ClusterIP"` |  |
+| longpolling.strategy | object | `{"type":"RollingUpdate"}` | kubernetes Deployment strategy, note: queue is always set to Recreate, |
+| longpolling.tolerations | list | `[]` |  |
 | nameOverride | string | `""` | overrides the name of the chart, ignoring what is used at deployment |
 | persistence.accessMode | string | `"ReadWriteMany"` | when running deployment with replicas > 1 ReadWriteMany is a requirement, if you are in an environment without ReadWriteMany available then you will need to find an alternative solution i.e. https://github.com/camptocamp/odoo-cloud-platform/tree/14.0/base_attachment_object_storage |
 | persistence.annotations | object | `{}` |  |
@@ -59,7 +81,7 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 | persistence.size | string | `"100Gi"` |  |
 | persistence.storageClassName | string | `"nfs-client"` |  |
 | queue.affinity | object | `{}` |  |
-| queue.config | string | `"[options]\nserver_wide_modules = queue_job\nworkers = 2\nmax_cron_threads = 1\nlimit_memory_soft = 3758096384\nlimit_memory_hard = 4294967296\nlimit_time_cpu = 14400\nlimit_time_real = 14400\nlimit_time_real_cron = 14400\n"` |  |
+| queue.config | string | `"[options]\nserver_wide_modules = queue_job,web\nworkers = 2\nmax_cron_threads = 1\nlimit_memory_soft = 3758096384\nlimit_memory_hard = 4294967296\nlimit_time_cpu = 14400\nlimit_time_real = 14400\nlimit_time_real_cron = 14400\n"` |  |
 | queue.enabled | bool | `false` | enable a second deployment, specifically running oca/queue_job |
 | queue.extraContainers | list | `[]` | optional extra containers |
 | queue.extraEnv | list | `[]` | optional extra environment variables |

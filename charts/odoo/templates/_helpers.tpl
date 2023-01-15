@@ -185,3 +185,31 @@ Velero fullname
 {{- $name := default .Chart.Name .Values.nameOverride }}
 {{- printf "%s-%s-%s" .Release.Namespace $name .Values.velero.name | trunc 63 | trimSuffix "-" -}}
 {{- end }}
+
+{{/*
+longpolling fullname
+*/}}
+{{- define "odoo.longpolling.fullname" -}}
+{{- if .Values.longpolling.fullnameOverride }}
+{{- .Values.longpolling.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- $name := default .Chart.Name .Values.nameOverride }}
+{{- printf "%s-%s" $name .Values.longpolling.name | trunc 63 | trimSuffix "-" -}}
+{{- end }}
+{{- end }}
+
+{{/*
+longpolling labels
+*/}}
+{{- define "odoo.longpolling.labels" -}}
+component: {{ .Values.longpolling.name | quote }}
+{{ include "odoo.common.labels" . }}
+{{- end }}
+
+{{/*
+longpolling Selector labels
+*/}}
+{{- define "odoo.longpolling.selectorLabels" -}}
+component: {{ .Values.longpolling.name | quote }}
+{{ include "odoo.common.selectorLabels" . }}
+{{- end }}
