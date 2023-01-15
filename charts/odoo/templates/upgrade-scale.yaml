@@ -1,0 +1,42 @@
+{{ if and .Values.upgrade .Values.upgrade.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "odoo.upgrade.fullname" . }}
+  labels:
+    {{- include "odoo.common.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": 'pre-upgrade'
+    "helm.sh/hook-delete-policy": before-hook-creation
+    "helm.sh/hook-weight": "6"
+spec:
+  template:
+    metadata:
+      name: {{ include "odoo.upgrade.fullname" . }}
+      labels:
+        {{- include "odoo.common.labels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Never
+      containers:
+      - name: {{ include "odoo.upgrade.fullname" . }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env: {{- include "odoo.common.env" . | nindent 10 }}
+        command:
+          - "/bin/bash"
+        args:
+          - "-c"
+          - |
+            /opt/odoo/common/entrypoint
+            if [ "$( psql -XtAc "SELECT 1 FROM pg_database WHERE datname='$PGDATABASE'" )" = '1' ]
+            then
+              echo "Database $PGDATABASE exists, running click-odoo-update"
+              click-odoo-update {{ .Values.upgrade.clickArgs }}
+            else
+              echo "Database $PGDATABASE does not exist, skipping click-odoo-upgrade"
+            fi
+{{ end }}

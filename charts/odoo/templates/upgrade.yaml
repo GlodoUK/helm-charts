@@ -1,4 +1,4 @@
-{{ if and .Values.upgrade .Values.upgrade.enabled }}
+{{ if and .Values.upgrade .Values.upgrade.enabled .Values.scale Values.scale.enabled }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -8,6 +8,7 @@ metadata:
   annotations:
     "helm.sh/hook": 'pre-upgrade'
     "helm.sh/hook-delete-policy": before-hook-creation
+    "helm.sh/hook-weight": "5"
 spec:
   template:
     metadata:
@@ -20,22 +21,31 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       restartPolicy: Never
+      {{- if .Values.upgrade.scale.serviceAccount.name }}
+      serviceAccountName: {{ .Values.upgrade.scale.serviceAccount.name }}
+      {{- else }}
+      serviceAccountName: {{ include "odoo.upgrade.fullname" . }}
+      {{- end }}
       containers:
       - name: {{ include "odoo.upgrade.fullname" . }}
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        env: {{- include "odoo.common.env" . | nindent 10 }}
+        image: "{{ .Values.upgrade.scale.image.repository }}:{{ .Values.upgrade.scale.image.tag | default "latest" }}"
+        imagePullPolicy: {{ .Values.upgrade.scale.pullPolicy }}
         command:
           - "/bin/bash"
         args:
           - "-c"
           - |
-            /opt/odoo/common/entrypoint
-            if [ "$( psql -XtAc "SELECT 1 FROM pg_database WHERE datname='$PGDATABASE'" )" = '1' ]
-            then
-              echo "Database $PGDATABASE exists, running click-odoo-update"
-              click-odoo-update {{ .Values.upgrade.clickArgs }}
-            else
-              echo "Database $PGDATABASE does not exist, skipping click-odoo-upgrade"
-            fi
+            {{- if .Values.web.enabled -}}
+            kubectl scale deployment/{{ include "odoo.web.fullname" . }} --replicas=0 -n {{ .Release.Namespace }};
+            kubectl rollout status deployment/{{ include "odoo.web.fullname" . }} -n {{ .Release.Namespace }};
+            {{- end }}
+            {{- if .Values.queue.enabled -}}
+            kubectl scale deployment/{{ include "odoo.queue.fullname" . }} --replicas=0 -n {{ .Release.Namespace }};
+            kubectl rollout status deployment/{{ include "odoo.queue.fullname" . }} -n {{ .Release.Namespace }};
+            {{- end }}
+            {{- if and .Values.web.enabled .Values.longpolling .Values.longpolling.enabled -}}
+            kubectl scale deployment/{{ include "odoo.longpolling.fullname" . }} --replicas=0 -n {{ .Release.Namespace }};
+            kubectl rollout status deployment/{{ include "odoo.longpolling.fullname" . }} -n {{ .Release.Namespace }};
+            {{- end }}
+
 {{ end }}

@@ -362,6 +362,27 @@ upgrade:
   # -- enable click-odoo-update on helm chart upgrade
   enabled: true
   name: "upgrade"
+
+  scale:
+    # -- automatically scale down/up the existing deployments before/after upgrade
+    enabled: false
+
+    serviceAccount:
+      # -- if not set and create is true, upgrade.name is used
+      name: ""
+      # -- automatically create the service account
+      create: true
+      # -- service account annotations
+      annotations: {}
+
+    image:
+      # -- container image
+      repository: bitnami/kubectl
+      # -- container tag
+      tag: "latest"
+      # -- container pullPolicy
+      pullPolicy: Always
+
   # -- customisable arguments for click-odoo-update
   clickArgs: "--ignore-core-addons"
 
