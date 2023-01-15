@@ -1,4 +1,4 @@
-{{ if and .Values.upgrade .Values.upgrade.enabled .Values.scale Values.scale.enabled }}
+{{ if and .Values.upgrade .Values.upgrade.enabled .Values.upgrade.scale.enabled }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -35,15 +35,15 @@ spec:
         args:
           - "-c"
           - |
-            {{- if .Values.web.enabled -}}
+            {{- if .Values.web.enabled }}
             kubectl scale deployment/{{ include "odoo.web.fullname" . }} --replicas=0 -n {{ .Release.Namespace }};
             kubectl rollout status deployment/{{ include "odoo.web.fullname" . }} -n {{ .Release.Namespace }};
             {{- end }}
-            {{- if .Values.queue.enabled -}}
+            {{- if .Values.queue.enabled }}
             kubectl scale deployment/{{ include "odoo.queue.fullname" . }} --replicas=0 -n {{ .Release.Namespace }};
             kubectl rollout status deployment/{{ include "odoo.queue.fullname" . }} -n {{ .Release.Namespace }};
             {{- end }}
-            {{- if and .Values.web.enabled .Values.longpolling .Values.longpolling.enabled -}}
+            {{- if and .Values.web.enabled .Values.longpolling .Values.longpolling.enabled }}
             kubectl scale deployment/{{ include "odoo.longpolling.fullname" . }} --replicas=0 -n {{ .Release.Namespace }};
             kubectl rollout status deployment/{{ include "odoo.longpolling.fullname" . }} -n {{ .Release.Namespace }};
             {{- end }}
