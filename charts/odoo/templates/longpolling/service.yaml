@@ -1,4 +1,4 @@
-{{- if and .Values.web.enabled .Values.longpolling.enabled }}
+{{- if and .Values.web.enabled .Values.longpolling .Values.longpolling.enabled }}
 apiVersion: v1
 kind: Service
 metadata:

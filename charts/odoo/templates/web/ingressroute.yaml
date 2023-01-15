@@ -40,7 +40,7 @@ spec:
         namespace: {{ .Release.Namespace }}
       {{- end }}
     services:
-    {{- if .Values.longpolling.enabled }}
+    {{- if and .Values.longpolling .Values.longpolling.enabled }}
     - name: {{ include "odoo.longpolling.fullname" . }}
       port: 8072
     {{- else }}

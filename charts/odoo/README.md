@@ -2,7 +2,7 @@
 
 An opinionated "Bring Your Own Image" Doodba (Odoo) Helm chart for Kubernetes
 
-![Version: 1.0.20230101](https://img.shields.io/badge/Version-1.0.20230101-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 1.0.20230102](https://img.shields.io/badge/Version-1.0.20230102-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 Opinionated odoo Bring Your Own Image chart designed for running [Doodba](https://github.com/Tecnativa/doodba) based Odoo deployments with Glodo defaults.
 

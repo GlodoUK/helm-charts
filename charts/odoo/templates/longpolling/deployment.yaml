@@ -1,4 +1,4 @@
-{{- if and .Values.web.enabled .Values.longpolling.enabled -}}
+{{- if and .Values.web.enabled .Values.longpolling .Values.longpolling.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
