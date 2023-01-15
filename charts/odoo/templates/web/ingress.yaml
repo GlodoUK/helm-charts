@@ -35,7 +35,11 @@ spec:
 
       - backend:
           service:
+            {{- if .Values.longpolling.enabled }}
+            name: {{ include "odoo.longpolling.fullname" . }}
+            {{- else }}
             name: {{ $fullname }}
+            {{- end }}
             port:
               number: 8072
         path: /longpolling/

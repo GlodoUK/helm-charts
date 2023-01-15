@@ -29,3 +29,7 @@ data:
   {{- if .Values.queue.enabled }}
   queue.conf: {{- toYaml .Values.queue.config | nindent 4 }}
   {{- end }}
+
+  {{- if .Values.longpolling.enabled }}
+  longpolling.conf: {{- toYaml .Values.longpolling.config | nindent 4 }}
+  {{- end }}
