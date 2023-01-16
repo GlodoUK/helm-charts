@@ -1,0 +1,51 @@
+{{ if and .Values.upgrade .Values.upgrade.enabled .Values.upgrade.scale.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "odoo.upgrade.fullname" . }}
+  labels:
+    {{- include "odoo.common.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": 'pre-upgrade'
+    "helm.sh/hook-delete-policy": before-hook-creation
+    "helm.sh/hook-weight": "5"
+spec:
+  template:
+    metadata:
+      name: {{ include "odoo.upgrade.fullname" . }}
+      labels:
+        {{- include "odoo.common.labels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Never
+      {{- if .Values.upgrade.scale.serviceAccount.name }}
+      serviceAccountName: {{ .Values.upgrade.scale.serviceAccount.name }}
+      {{- else }}
+      serviceAccountName: {{ include "odoo.upgrade.fullname" . }}
+      {{- end }}
+      containers:
+      - name: {{ include "odoo.upgrade.fullname" . }}
+        image: "{{ .Values.upgrade.scale.image.repository }}:{{ .Values.upgrade.scale.image.tag | default "latest" }}"
+        imagePullPolicy: {{ .Values.upgrade.scale.pullPolicy }}
+        command:
+          - "/bin/bash"
+        args:
+          - "-c"
+          - |
+            {{- if .Values.web.enabled }}
+            kubectl scale deployment/{{ include "odoo.web.fullname" . }} --replicas={{ .Values.upgrade.scale.webCount }} -n {{ .Release.Namespace }};
+            kubectl rollout status deployment/{{ include "odoo.web.fullname" . }} -n {{ .Release.Namespace }};
+            {{- end }}
+            {{- if .Values.queue.enabled }}
+            kubectl scale deployment/{{ include "odoo.queue.fullname" . }} --replicas={{ .Values.upgrade.scale.queueCount }} -n {{ .Release.Namespace }};
+            kubectl rollout status deployment/{{ include "odoo.queue.fullname" . }} -n {{ .Release.Namespace }};
+            {{- end }}
+            {{- if and .Values.web.enabled .Values.longpolling .Values.longpolling.enabled }}
+            kubectl scale deployment/{{ include "odoo.longpolling.fullname" . }} --replicas={{ .Values.upgrade.scale.longpollingCount }} -n {{ .Release.Namespace }};
+            kubectl rollout status deployment/{{ include "odoo.longpolling.fullname" . }} -n {{ .Release.Namespace }};
+            {{- end }}
+
+{{ end }}

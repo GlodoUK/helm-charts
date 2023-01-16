@@ -2,7 +2,7 @@
 
 An opinionated "Bring Your Own Image" Doodba (Odoo) Helm chart for Kubernetes
 
-![Version: 1.0.20230102](https://img.shields.io/badge/Version-1.0.20230102-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 1.0.20230104](https://img.shields.io/badge/Version-1.0.20230104-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 Opinionated odoo Bring Your Own Image chart designed for running [Doodba](https://github.com/Tecnativa/doodba) based Odoo deployments with Glodo defaults.
 
@@ -13,9 +13,7 @@ Includes support for:
   * [cert-manager](https://cert-manager.io/) CRD support
   * Both Traefik IngressRoute and Ingress
   * Automatic running of [click-odoo-update](https://github.com/acsone/click-odoo-contrib#click-odoo-update-stable)
-
-Future plans include:
-  * Optionally automatically scaling down before click-odoo-update, and then back up
+  * Optional support for scaling down the installation before click-odoo-update runs
 
 ## Installing the Chart
 
@@ -99,6 +97,16 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 | upgrade.clickArgs | string | `"--ignore-core-addons"` | customisable arguments for click-odoo-update |
 | upgrade.enabled | bool | `true` | enable click-odoo-update on helm chart upgrade |
 | upgrade.name | string | `"upgrade"` |  |
+| upgrade.scale.enabled | bool | `false` | automatically scale down/up the existing deployments before/after upgrade |
+| upgrade.scale.image.pullPolicy | string | `"Always"` | container pullPolicy |
+| upgrade.scale.image.repository | string | `"bitnami/kubectl"` | container image |
+| upgrade.scale.image.tag | string | `"latest"` | container tag |
+| upgrade.scale.longpollingCount | int | `0` |  |
+| upgrade.scale.queueCount | int | `0` |  |
+| upgrade.scale.serviceAccount.annotations | object | `{}` | service account annotations |
+| upgrade.scale.serviceAccount.create | bool | `true` | automatically create the service account |
+| upgrade.scale.serviceAccount.name | string | `""` | if not set and create is true, upgrade.name is used |
+| upgrade.scale.webCount | int | `0` |  |
 | velero.defaultVolumesToRestic | bool | `true` | see https://velero.io/docs/v1.9/customize-installation/#default-pod-volume-backup-to-restic |
 | velero.enabled | bool | `false` | enable creation of velero schedule |
 | velero.extraHooks | list | `[]` | additional hooks |
