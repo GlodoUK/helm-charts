@@ -101,9 +101,12 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 | upgrade.scale.image.pullPolicy | string | `"Always"` | container pullPolicy |
 | upgrade.scale.image.repository | string | `"bitnami/kubectl"` | container image |
 | upgrade.scale.image.tag | string | `"latest"` | container tag |
+| upgrade.scale.longpollingCount | int | `0` |  |
+| upgrade.scale.queueCount | int | `0` |  |
 | upgrade.scale.serviceAccount.annotations | object | `{}` | service account annotations |
 | upgrade.scale.serviceAccount.create | bool | `true` | automatically create the service account |
 | upgrade.scale.serviceAccount.name | string | `""` | if not set and create is true, upgrade.name is used |
+| upgrade.scale.webCount | int | `0` |  |
 | velero.defaultVolumesToRestic | bool | `true` | see https://velero.io/docs/v1.9/customize-installation/#default-pod-volume-backup-to-restic |
 | velero.enabled | bool | `false` | enable creation of velero schedule |
 | velero.extraHooks | list | `[]` | additional hooks |

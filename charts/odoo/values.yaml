@@ -383,6 +383,10 @@ upgrade:
       # -- container pullPolicy
       pullPolicy: Always
 
+    webCount: 0
+    queueCount: 0
+    longpollingCount: 0
+
   # -- customisable arguments for click-odoo-update
   clickArgs: "--ignore-core-addons"
 

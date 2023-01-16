@@ -36,15 +36,15 @@ spec:
           - "-c"
           - |
             {{- if .Values.web.enabled }}
-            kubectl scale deployment/{{ include "odoo.web.fullname" . }} --replicas=0 -n {{ .Release.Namespace }};
+            kubectl scale deployment/{{ include "odoo.web.fullname" . }} --replicas={{ .Values.upgrade.scale.webCount }} -n {{ .Release.Namespace }};
             kubectl rollout status deployment/{{ include "odoo.web.fullname" . }} -n {{ .Release.Namespace }};
             {{- end }}
             {{- if .Values.queue.enabled }}
-            kubectl scale deployment/{{ include "odoo.queue.fullname" . }} --replicas=0 -n {{ .Release.Namespace }};
+            kubectl scale deployment/{{ include "odoo.queue.fullname" . }} --replicas={{ .Values.upgrade.scale.queueCount }} -n {{ .Release.Namespace }};
             kubectl rollout status deployment/{{ include "odoo.queue.fullname" . }} -n {{ .Release.Namespace }};
             {{- end }}
             {{- if and .Values.web.enabled .Values.longpolling .Values.longpolling.enabled }}
-            kubectl scale deployment/{{ include "odoo.longpolling.fullname" . }} --replicas=0 -n {{ .Release.Namespace }};
+            kubectl scale deployment/{{ include "odoo.longpolling.fullname" . }} --replicas={{ .Values.upgrade.scale.longpollingCount }} -n {{ .Release.Namespace }};
             kubectl rollout status deployment/{{ include "odoo.longpolling.fullname" . }} -n {{ .Release.Namespace }};
             {{- end }}
 
