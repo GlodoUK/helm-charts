@@ -42,7 +42,7 @@ spec:
             {{- end }}
             port:
               number: 8072
-        path: {{ .Values.web.ingress.geventPath }}
+        path: {{ $.Values.web.ingress.geventPath }}
         pathType: Prefix
   {{- end }}
 

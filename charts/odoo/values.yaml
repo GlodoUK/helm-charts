@@ -212,7 +212,7 @@ web:
     # runAsUser: 1000
 
 longpolling:
-  # -- enable a separate longpolling instance, both web and longpolling must be enabled
+  # -- enable a separate longpolling / or websocket instance, both web and longpolling/websocket must be enabled
   enabled: false
   name: "longpolling"
 
