@@ -213,3 +213,15 @@ longpolling Selector labels
 component: {{ .Values.longpolling.name | quote }}
 {{ include "odoo.common.selectorLabels" . }}
 {{- end }}
+
+{{/*
+install fullname
+*/}}
+{{- define "odoo.install.fullname" -}}
+{{- if .Values.install.fullnameOverride }}
+{{- .Values.install.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- $name := default .Chart.Name .Values.nameOverride }}
+{{- printf "%s-%s" $name .Values.install.name | trunc 63 | trimSuffix "-" -}}
+{{- end }}
+{{- end }}

@@ -1,0 +1,16 @@
+Thank you for installing {{ .Chart.Name }}.
+
+Your release is named {{ .Release.Name }}.
+
+{{- if and .Values.web.enabled .Values.web.ingress.enabled (eq .Values.web.ingress.type "IngressRoute") }}
+It is now our intention to deprecate Traefik support within this chart.
+This means that we will be looking to remove any Traefik specific resources,
+including, but not limited to:
+  - IngressRoute
+  - Middleware
+
+You *must* start considering the migration process. It is our intention to
+remove Traefik CRD after 6 months.
+
+For more information on the why, please take a look at https://github.com/GlodoUK/helm-charts/issues/48.
+{{- end }}

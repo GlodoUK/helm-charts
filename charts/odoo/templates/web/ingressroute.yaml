@@ -28,7 +28,7 @@ spec:
     services:
     - name: {{ $fullname }}
       port: 8069
-  - match: ({{ .Values.web.ingress.match }}) && PathPrefix(`/longpolling/`)
+  - match: ({{ .Values.web.ingress.match }}) && PathPrefix(`{{ .Values.web.ingress.geventPath }}`)
     kind: Rule
     middlewares:
       {{- range .Values.web.ingress.middlewares }}

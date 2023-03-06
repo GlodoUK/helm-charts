@@ -42,7 +42,7 @@ spec:
             {{- end }}
             port:
               number: 8072
-        path: /longpolling/
+        path: {{ .Values.web.ingress.geventPath }}
         pathType: Prefix
   {{- end }}
 
