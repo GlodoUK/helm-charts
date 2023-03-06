@@ -1,0 +1,42 @@
+{{ if and .Values.install .Values.install.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "odoo.install.fullname" . }}
+  labels:
+    {{- include "odoo.common.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": "post-install"
+    "helm.sh/hook-delete-policy": "hook-succeeded"
+    "helm.sh/hook-weight": "5"
+spec:
+  template:
+    metadata:
+      name: {{ include "odoo.install.fullname" . }}
+      labels:
+        {{- include "odoo.common.labels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Never
+      containers:
+      - name: {{ include "odoo.install.fullname" . }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env: {{- include "odoo.common.env" . | nindent 10 }}
+        command:
+          - "/bin/bash"
+        args:
+          - "-c"
+          - |
+            /opt/odoo/common/entrypoint
+            if [ "$( psql -XtAc "SELECT 1 FROM pg_database WHERE datname='$PGDATABASE'" )" != '1' ] || [ "$( psql -XtAc "SELECT count(*) FROM pg_catalog.pg_tables WHERE tablename = 'ir_module_module'" )" != '1' ]
+            then
+              echo "Database does not exist, or is blank, attempting init."
+              odoo -i base -d $PGDATABASE --no-http --stop-after-init
+            else
+              echo "Skipping database init"
+            fi
+{{ end }}

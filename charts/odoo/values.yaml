@@ -75,14 +75,11 @@ web:
   # -- through environment variables
   config: |
     [options]
-    limit_memory_soft = 3758096384
-    limit_memory_hard = 4294967296
     limit_time_cpu = 360
     limit_time_real = 360
     limit_time_real_cron = 360
     max_cron_threads = 1
-    workers = 5
-    longpolling_port = 8072
+    workers = 4
 
   replicaCount: 1
   service:
@@ -223,13 +220,11 @@ longpolling:
   # -- through environment variables
   config: |
     [options]
-    limit_memory_soft = 3758096384
-    limit_memory_hard = 4294967296
     limit_time_cpu = 360
     limit_time_real = 360
     limit_time_real_cron = 360
     max_cron_threads = 0
-    workers = 5
+    workers = 4
     longpolling_port = 8072
 
   replicaCount: 1
@@ -312,8 +307,6 @@ queue:
     server_wide_modules = queue_job,web
     workers = 2
     max_cron_threads = 1
-    limit_memory_soft = 3758096384
-    limit_memory_hard = 4294967296
     limit_time_cpu = 14400
     limit_time_real = 14400
     limit_time_real_cron = 14400
@@ -360,6 +353,11 @@ queue:
     # readOnlyRootFilesystem: true
     # runAsNonRoot: true
     # runAsUser: 1
+
+install:
+  # -- enable the pre-install hook to init the db
+  enabled: false
+  name: "install"
 
 upgrade:
   # -- enable click-odoo-update on helm chart upgrade

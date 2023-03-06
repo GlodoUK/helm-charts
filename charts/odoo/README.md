@@ -49,8 +49,10 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 | image.repository | string | `"glodouk/CHANGEME"` | container image |
 | image.tag | string | `""` | container tag |
 | imagePullSecrets | list | `[]` | imagePullSecrets will be propagated to all containers, if set |
+| install.enabled | bool | `false` | enable the pre-install hook to init the db |
+| install.name | string | `"install"` |  |
 | longpolling.affinity | object | `{}` |  |
-| longpolling.config | string | `"[options]\nlimit_memory_soft = 3758096384\nlimit_memory_hard = 4294967296\nlimit_time_cpu = 360\nlimit_time_real = 360\nlimit_time_real_cron = 360\nmax_cron_threads = 0\nworkers = 5\nlongpolling_port = 8072\n"` | through environment variables |
+| longpolling.config | string | `"[options]\nlimit_time_cpu = 360\nlimit_time_real = 360\nlimit_time_real_cron = 360\nmax_cron_threads = 0\nworkers = 4\nlongpolling_port = 8072\n"` | through environment variables |
 | longpolling.enabled | bool | `false` | enable a separate longpolling instance, both web and longpolling must be enabled |
 | longpolling.extraContainers | list | `[]` | optional extra containers |
 | longpolling.extraEnv | list | `[]` | optional extra environment variables |
@@ -79,7 +81,7 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 | persistence.size | string | `"100Gi"` |  |
 | persistence.storageClassName | string | `"nfs-client"` |  |
 | queue.affinity | object | `{}` |  |
-| queue.config | string | `"[options]\nserver_wide_modules = queue_job,web\nworkers = 2\nmax_cron_threads = 1\nlimit_memory_soft = 3758096384\nlimit_memory_hard = 4294967296\nlimit_time_cpu = 14400\nlimit_time_real = 14400\nlimit_time_real_cron = 14400\n"` |  |
+| queue.config | string | `"[options]\nserver_wide_modules = queue_job,web\nworkers = 2\nmax_cron_threads = 1\nlimit_time_cpu = 14400\nlimit_time_real = 14400\nlimit_time_real_cron = 14400\n"` |  |
 | queue.enabled | bool | `false` | enable a second deployment, specifically running oca/queue_job |
 | queue.extraContainers | list | `[]` | optional extra containers |
 | queue.extraEnv | list | `[]` | optional extra environment variables |
@@ -122,7 +124,7 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 | web.certificate.issuerRef.kind | string | `"ClusterIssuer"` |  |
 | web.certificate.issuerRef.name | string | `"letsencrypt"` |  |
 | web.certificate.secretName | string | `"odoo-web"` |  |
-| web.config | string | `"[options]\nlimit_memory_soft = 3758096384\nlimit_memory_hard = 4294967296\nlimit_time_cpu = 360\nlimit_time_real = 360\nlimit_time_real_cron = 360\nmax_cron_threads = 1\nworkers = 5\nlongpolling_port = 8072\n"` | through environment variables |
+| web.config | string | `"[options]\nlimit_time_cpu = 360\nlimit_time_real = 360\nlimit_time_real_cron = 360\nmax_cron_threads = 1\nworkers = 4\n"` | through environment variables |
 | web.dns.enabled | bool | `false` | enables external-dns CRD (DNSEndpoint) creation |
 | web.dns.endPoints | list | `[]` | must be DNSEndpoint compatible As of time of writing only A, CNAME, TXT and SRV records are supported See: https://github.com/ytsarev/external-dns/blob/master/endpoint/endpoint.go#L27-L36 ```yaml - dnsName: "something.domain"   recordTTL: 60   recordType: A   targets:     - xx.xx.xx.xx ``` |
 | web.enabled | bool | `true` | enable Odoo web worker |
