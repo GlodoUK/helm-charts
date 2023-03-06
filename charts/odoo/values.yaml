@@ -148,6 +148,9 @@ web:
       secretName: ""
       certResolver: "letsencrypt"
 
+    # -- "longpolling" path. Under 16.0 this should be changed for /websocket
+    geventPath: "/longpolling/"
+
   livenessProbe:
     # -- enable livenessProbe
     enabled: false

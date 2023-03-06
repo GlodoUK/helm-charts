@@ -2,7 +2,7 @@
 
 An opinionated "Bring Your Own Image" Doodba (Odoo) Helm chart for Kubernetes
 
-![Version: 1.0.20230104](https://img.shields.io/badge/Version-1.0.20230104-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 1.0.20230301](https://img.shields.io/badge/Version-1.0.20230301-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 Opinionated odoo Bring Your Own Image chart designed for running [Doodba](https://github.com/Tecnativa/doodba) based Odoo deployments with Glodo defaults.
 
@@ -134,6 +134,7 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 | web.ingress.compress | bool | `false` | Automatically create a Traefik compress middleware |
 | web.ingress.enabled | bool | `true` | enable Ingress or Traefik IngressRoute creation |
 | web.ingress.entryPoints | list | `["websecure"]` | if type is IngressRoute then the IngressRoute entryPoint, if type is Ingress then it will automatically set the entrypoint annotation |
+| web.ingress.geventPath | string | `"/longpolling/"` | "longpolling" path. Under 16.0 this should be changed for /websocket |
 | web.ingress.hosts | list | `["chart-example.local"]` | if type is Ingress then a list of host names to match, if not using certificate CRD then also used for tls host names |
 | web.ingress.match | string | `"Host(`chart-example.local`)"` | if type is IngressRoute then a string of IngressRoute compatible matches |
 | web.ingress.middlewares | list | `[]` | if type is IngressRoute then Traefik Middlewares, if type is Ingress then it will automatically set Ingress annotations |
