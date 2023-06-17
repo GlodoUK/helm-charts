@@ -7,13 +7,17 @@ metadata:
 data:
   PGHOST: {{ .Values.config.postgresql.host | quote }}
   PGPORT: {{ .Values.config.postgresql.port | quote }}
+  {{- if not (and .Values.config.postgresql.secretRef .Values.config.postgresql.secretRef.name .Values.config.postgresql.secretRef.keys (hasKey .Values.config.postgresql.secretRef.keys "user")) }}
   PGUSER: {{ .Values.config.postgresql.user | quote }}
+  {{- end }}
   PGDATABASE: {{ .Values.config.postgresql.database | quote }}
   PROXY_MODE: {{ .Values.config.proxyMode | quote }}
   WITHOUT_DEMO: {{ .Values.config.withoutDemo | quote }}
   SMTP_SERVER: {{ .Values.config.smtp.host | quote }}
   SMTP_PORT: {{ .Values.config.smtp.port | quote }}
+  {{- if not (and .Values.config.smtp.secretRef .Values.config.smtp.secretRef.name .Values.config.smtp.secretRef.keys (hasKey .Values.config.smtp.secretRef.keys "user")) }}
   SMTP_USER: {{ .Values.config.smtp.user | quote }}
+  {{- end }}
   SMTP_SSL: {{ .Values.config.smtp.ssl | quote }}
   LIST_DB: {{ .Values.config.listDB | quote }}
   {{- if .Values.config.dbFilter }}

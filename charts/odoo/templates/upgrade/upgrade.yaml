@@ -39,4 +39,16 @@ spec:
             else
               echo "Database $PGDATABASE does not exist, skipping click-odoo-upgrade"
             fi
+        volumeMounts:
+          - name: odoo-data
+            mountPath: /var/lib/odoo
+      volumes:
+        - name: odoo-data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "odoo.persistence.fullname" .) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+
 {{ end }}

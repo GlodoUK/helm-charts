@@ -29,18 +29,24 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| config.adminPassword | string | `""` | sets odoo configuration admin_password |
+| config.adminPassword | string | `""` | sets odoo configuration admin_password, it is not recommend to use this key |
 | config.dbFilter | string | `".*"` | sets odoo configuration db_filter |
 | config.listDB | string | `"true"` | sets odoo configuration list_db |
 | config.postgresql.database | string | `""` | sets both odoo configuration PGDATABASE, if you are setting this, you probably waant to also set config.dbFilter |
 | config.postgresql.host | string | `""` | sets both odoo configuration db_host and environment variable PGHOST |
 | config.postgresql.password | string | `""` | sets both odoo configuration db_password and environment variable PGPASSWORD |
 | config.postgresql.port | int | `5432` | sets both odoo configuration db_port and environment variable PGPORT |
+| config.postgresql.secretRef.keys | object | `{"password":"password","user":"username"}` | format 'helm value: secret key name' |
+| config.postgresql.secretRef.name | string | `""` | if set this secret's keys will be used preferentially |
 | config.postgresql.user | string | `""` | sets both odoo configuration db_username and environment variable PGUSER |
 | config.proxyMode | string | `"true"` | sets odoo configuration proxy_mode |
+| config.secretRef.keys.adminPassword | string | `"password"` |  |
+| config.secretRef.name | string | `""` | if set this secret's keys will be used preferentially |
 | config.smtp.host | string | `"false"` | sets odoo configuration smtp_server |
 | config.smtp.password | string | `"false"` | sets odoo configuration smtp_password |
 | config.smtp.port | string | `"false"` | sets odoo configuration smtp_port |
+| config.smtp.secretRef.keys | object | `{"password":"password","user":"username"}` | key presents one of the above values (user, password), value represents secret key |
+| config.smtp.secretRef.name | string | `""` | if set this secret's keys will be used preferentially |
 | config.smtp.ssl | string | `"false"` | sets odoo configuration smtp_ssl |
 | config.smtp.user | string | `"false"` | sets odoo configuration smtp_user |
 | config.withoutDemo | string | `"true"` | sets odoo configuration without_demo |
