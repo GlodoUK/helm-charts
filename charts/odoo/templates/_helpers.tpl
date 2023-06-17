@@ -36,20 +36,74 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Common envars
 */}}
 {{- define "odoo.common.env" -}}
-{{- range list "PGHOST" "PGPORT" "PGUSER" "PGDATABASE" "PROXY_MODE" "WITHOUT_DEMO" "SMTP_SERVER" "SMTP_PORT" "SMTP_USER" "SMTP_SSL" "LIST_DB" }}
+{{- range list "PGHOST" "PGPORT" "PGDATABASE" "PROXY_MODE" "WITHOUT_DEMO" "SMTP_SERVER" "SMTP_PORT" "SMTP_SSL" "LIST_DB" }}
 - name: {{ . }}
   valueFrom:
     configMapKeyRef:
       name: {{ include "odoo.config.fullname" $ }}
       key: {{ . }}
 {{- end }}
-{{- range list "PGPASSWORD" "ADMIN_PASSWORD" "SMTP_PASSWORD" }}
-- name: {{ . }}
+
+- name: "ADMIN_PASSWORD"
   valueFrom:
+    {{- if and .Values.config.secretRef .Values.config.secretRef.name .Values.config.secretRef.keys (hasKey .Values.config.secretRef.keys "adminPassword") }}
+    secretKeyRef:
+      name: {{ .Values.config.secretRef.name }}
+      key: {{ .Values.config.secretRef.keys.adminPassword }}
+    {{- else }}
     secretKeyRef:
       name: {{ include "odoo.secret.fullname" $ }}
-      key: {{ . }}
-{{- end }}
+      key: "ADMIN_PASSWORD"
+    {{- end }}
+
+- name: "PGUSER"
+  valueFrom:
+    {{- if and .Values.config.postgresql.secretRef .Values.config.postgresql.secretRef.name .Values.config.postgresql.secretRef.keys (hasKey .Values.config.postgresql.secretRef.keys "user") }}
+    secretKeyRef:
+      name: {{ .Values.config.postgresql.secretRef.name }}
+      key: {{ .Values.config.postgresql.secretRef.keys.user }}
+    {{- else }}
+    configMapKeyRef:
+      name: {{ include "odoo.config.fullname" $ }}
+      key: "PGUSER"
+    {{- end }}
+
+- name: "PGPASSWORD"
+  valueFrom:
+    {{- if and .Values.config.postgresql.secretRef .Values.config.postgresql.secretRef.name .Values.config.postgresql.secretRef.keys (hasKey .Values.config.postgresql.secretRef.keys "password") }}
+    secretKeyRef:
+      name: {{ .Values.config.postgresql.secretRef.name }}
+      key: {{ .Values.config.postgresql.secretRef.keys.password }}
+    {{- else }}
+    secretKeyRef:
+      name: {{ include "odoo.secret.fullname" $ }}
+      key: "PGPASSWORD"
+    {{- end }}
+
+- name: "SMTP_USER"
+  valueFrom:
+    {{- if and .Values.config.smtp.secretRef .Values.config.smtp.secretRef.name .Values.config.smtp.secretRef.keys (hasKey .Values.config.smtp.secretRef.keys "user") }}
+    secretKeyRef:
+      name: {{ .Values.config.smtp.secretRef.name }}
+      key: {{ .Values.config.smtp.secretRef.keys.user }}
+    {{- else }}
+    configMapKeyRef:
+      name: {{ include "odoo.config.fullname" $ }}
+      key: "SMTP_USER"
+    {{- end }}
+
+- name: "SMTP_PASSWORD"
+  valueFrom:
+    {{- if and .Values.config.smtp.secretRef .Values.config.smtp.secretRef.name .Values.config.smtp.secretRef.keys (hasKey .Values.config.smtp.secretRef.keys "password") }}
+    secretKeyRef:
+      name: {{ .Values.config.smtp.secretRef.name }}
+      key: {{ .Values.config.smtp.secretRef.keys.password }}
+    {{- else }}
+    secretKeyRef:
+      name: {{ include "odoo.secret.fullname" $ }}
+      key: "SMTP_PASSWORD"
+    {{- end }}
+
 {{- if .Values.config.dbFilter }}
 - name: DB_FILTER
   valueFrom:

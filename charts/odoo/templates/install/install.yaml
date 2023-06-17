@@ -7,7 +7,6 @@ metadata:
     {{- include "odoo.common.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": "post-install"
-    "helm.sh/hook-delete-policy": "hook-succeeded"
     "helm.sh/hook-weight": "5"
 spec:
   template:
@@ -39,4 +38,16 @@ spec:
             else
               echo "Skipping database init"
             fi
+        volumeMounts:
+          - name: odoo-data
+            mountPath: /var/lib/odoo
+      volumes:
+        - name: odoo-data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "odoo.persistence.fullname" .) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+
 {{ end }}

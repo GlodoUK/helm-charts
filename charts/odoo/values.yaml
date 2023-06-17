@@ -27,8 +27,13 @@ config:
   listDB: "true"
   # -- sets odoo configuration db_filter
   dbFilter: ".*"
-  # -- sets odoo configuration admin_password
+  # -- sets odoo configuration admin_password, it is not recommend to use this key
   adminPassword: ""
+  secretRef:
+    # -- if set this secret's keys will be used preferentially
+    name: ""
+    keys:
+      adminPassword: "password"
 
   postgresql:
     # -- sets both odoo configuration db_host and environment variable PGHOST
@@ -39,9 +44,15 @@ config:
     password: ""
     # -- sets both odoo configuration db_port and environment variable PGPORT
     port: 5432
-    # -- sets both odoo configuration PGDATABASE, if you are setting this, you
-    # probably waant to also set config.dbFilter
+    # -- sets both odoo configuration PGDATABASE, if you are setting this, you probably waant to also set config.dbFilter
     database: ""
+    secretRef:
+      # -- if set this secret's keys will be used preferentially
+      name: ""
+      # -- format 'helm value: secret key name'
+      keys:
+        user: "username"
+        password: "password"
 
   smtp:
     # -- sets odoo configuration smtp_server
@@ -54,6 +65,13 @@ config:
     password: "false"
     # -- sets odoo configuration smtp_ssl
     ssl: "false"
+    secretRef:
+      # -- if set this secret's keys will be used preferentially
+      name: ""
+      # -- key presents one of the above values (user, password), value represents secret key
+      keys:
+        user: "username"
+        password: "password"
 
 persistence:
   # -- enable /var/lib/odoo persistence, without persistence it will be temporary - and that's a bad thing!
