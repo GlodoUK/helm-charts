@@ -39,4 +39,16 @@ spec:
             else
               echo "Database $PGDATABASE does not exist, skipping click-odoo-upgrade"
             fi
+      {{- with .Values.upgrade.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.upgrade.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.upgrade.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
 {{ end }}

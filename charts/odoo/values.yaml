@@ -359,6 +359,10 @@ install:
   enabled: false
   name: "install"
 
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
 upgrade:
   # -- enable click-odoo-update on helm chart upgrade
   enabled: true
@@ -388,6 +392,10 @@ upgrade:
     queueCount: 0
     longpollingCount: 0
 
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
   # -- customisable arguments for click-odoo-update
   clickArgs: "--ignore-core-addons"
 
@@ -401,9 +409,11 @@ velero:
   veleroNamespace: "velero"
   # -- the schedule will be named `namespace-of-deployment-chart-name-name`
   name: "backup"
-  # -- see https://velero.io/docs/v1.9/customize-installation/#default-pod-volume-backup-to-restic
-  defaultVolumesToRestic: true
-  # -- see https://velero.io/docs/v1.9/resource-filtering/#--include-cluster-resources
+  # -- backwards compat, please migrate to defaultVolumesToFsBackup
+  defaultVolumesToRestic: false
+  # -- see https://velero.io/docs/v1.12/api-types/schedule/
+  defaultVolumesToFsBackup: false
+  # -- see https://velero.io/docs/v1.12/resource-filtering/#--include-cluster-resources
   includeClusterResources: false
   # -- schedule to run on
   schedule: "5 6,12,18 * * *"

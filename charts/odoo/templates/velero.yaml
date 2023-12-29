@@ -9,7 +9,11 @@ metadata:
 spec:
   schedule: {{ .Values.velero.schedule | quote }}
   template:
+    {{- if .Values.velero.defaultVolumesToFsBackup }}
+    defaultVolumesToFsBackup: {{ .Values.velero.defaultVolumesToFsBackup }}
+    {{- else if .Values.velero.defaultVolumesToRestic }}
     defaultVolumesToRestic: {{ .Values.velero.defaultVolumesToRestic }}
+    {{- end }}
     includeClusterResources: {{ .Values.velero.includeClusterResources }}
     includedNamespaces:
       - {{ .Release.Namespace }}
