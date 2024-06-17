@@ -44,7 +44,7 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 | config.smtp.ssl | string | `"false"` | sets odoo configuration smtp_ssl |
 | config.smtp.user | string | `"false"` | sets odoo configuration smtp_user |
 | config.withoutDemo | string | `"true"` | sets odoo configuration without_demo |
-| extraManifests | string | `""` | Use extraManifests (string) to add. This is run through the templating system, and may be useful to create custom additional deployments, statefulsets, etc. that need a "rollme" annotation changed to force redeployment after changes are made. |
+| extraManifests | list | `[]` | Use extraManifests (list) to add |
 | image.pullPolicy | string | `"IfNotPresent"` | container pullPolicy |
 | image.repository | string | `"glodouk/CHANGEME"` | container image |
 | image.tag | string | `""` | container tag |
