@@ -382,7 +382,7 @@ upgrade:
 
     image:
       # -- container image
-      repository: bitnami/kubectl
+      repository: bitnamisecure/kubectl
       # -- container tag
       tag: "latest"
       # -- container pullPolicy
