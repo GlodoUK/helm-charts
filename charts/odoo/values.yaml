@@ -59,7 +59,7 @@ persistence:
   # -- enable /var/lib/odoo persistence, without persistence it will be temporary - and that's a bad thing!
   enabled: true
   name: "storage"
-  storageClassName: "nfs-client"
+  storageClassName: ""
   existingClaim: ""
   annotations: {}
   # -- when running deployment with replicas > 1 ReadWriteMany is a requirement, if you are in an environment without ReadWriteMany available then you will need to find an alternative solution i.e. https://github.com/camptocamp/odoo-cloud-platform/tree/14.0/base_attachment_object_storage

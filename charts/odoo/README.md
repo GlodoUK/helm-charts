@@ -87,7 +87,7 @@ $ helm install my-release glodo/odoo -f ./helm-values.yaml
 | persistence.existingClaim | string | `""` |  |
 | persistence.name | string | `"storage"` |  |
 | persistence.size | string | `"100Gi"` |  |
-| persistence.storageClassName | string | `"nfs-client"` |  |
+| persistence.storageClassName | string | `""` |  |
 | queue.affinity | object | `{}` |  |
 | queue.config | string | `"[options]\nserver_wide_modules = queue_job,web\nworkers = 2\nmax_cron_threads = 1\nlimit_time_cpu = 14400\nlimit_time_real = 14400\nlimit_time_real_cron = 14400\n"` |  |
 | queue.enabled | bool | `false` | enable a second deployment, specifically running oca/queue_job |
