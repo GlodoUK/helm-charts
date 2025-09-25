@@ -21,6 +21,8 @@ spec:
         {{- if .Values.rollme }}
         rollme: {{ randAlphaNum 5 | quote }}
         {{- end }}
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
       labels:
         {{- include "odoo.queue.selectorLabels" . | nindent 8 }}
     spec:

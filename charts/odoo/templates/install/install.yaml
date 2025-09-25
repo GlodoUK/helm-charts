@@ -39,6 +39,9 @@ spec:
             else
               echo "Skipping database init"
             fi
+        volumeMounts:
+          - name: odoo-data
+            mountPath: /var/lib/odoo
       {{- with .Values.install.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -51,4 +54,13 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      volumes:
+        - name: odoo-data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "odoo.persistence.fullname" .) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+
 {{ end }}
